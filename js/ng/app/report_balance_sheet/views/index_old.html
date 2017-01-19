@@ -1,0 +1,116 @@
+<div class="panel panel-default">
+	<div class="panel-heading">
+		Balance Sheet Report
+	</div>
+	<div class="panel-body">
+		<table class="table table-bordered">
+			<tr>
+				<td width="100px">
+					Us Of Date:
+				</td>
+				<td width="270px">
+					<div
+						cambodia-date-picker
+						date-format="y/MM/dd"
+						class="col-md-4"
+					>
+						<input data-ng-model="from_date" class="form-control date" type="text"/>
+					</div>
+				</td>
+				<td>
+					<button class="btn btn-success margin-top" data-ng-click="init();">
+						<i class="fa fa-hourglass-half"></i>
+						Filter
+					</button>
+					<button class="btn btn-default margin-top" data-ng-click="print();">
+						<i class="fa fa-print"></i>
+						Print
+					</button>
+				</td>
+			</tr>
+		</table>
+
+		<div data-ng-if="balanceSheet.count" id="print">
+			<div class="alert alert-warning" data-ng-if="total_liability != total_asset">
+				<p>
+					<b>Warning:</b>
+					Your Accounting Equation Is Not Equal.
+				</p>
+			</div>
+			<table width="100%">
+				<tr>
+					<td align="center">
+						<img src="images/IMI.jpg" width="350px"/>
+						<h4>
+							Balance Sheet Report
+						</h4>
+						{{from_date}}
+					</td>
+				</tr>
+			</table>
+			<br/>
+            <table width="100%"> 
+                <tr>
+                    <td>
+                        <ul data-ng-repeat="b in balanceSheet.elements">
+                            <table width="100%">
+                                <tr>
+                                    <td>
+                                        <li style="list-style:none;">
+                                            {{b.name}} 
+                                        </li>
+                                        <ul data-ng-repeat="d in b.detail">
+                                            <table width="100%">
+                                                <tr>
+                                                    <td width="80%">
+                                                        <li style="list-style:none;">
+                                                            {{d.name}}
+                                                            ..........................................................
+                                                        </li>
+                                                        <ul data-ng-repeat="ad in d.detail">
+                                                            <table width="100%">
+                                                                <tr>
+                                                                    <td style="width: 100%">
+                                                                        {{ad.name}}
+                                                                        .............................................
+                                                                    </td>
+                                                                    <td align="right" valign="top">
+                                                                        {{ ad.total | currency }}
+                                                                    </td>
+                                                                </tr>
+                                                            </table>
+                                                        </ul>
+                                                    </td>
+                                                    <td align="right" valign="top" style="float: right;">
+                                                        <b style="text-decoration: underline;">{{d.total | currency }}</b>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </ul>
+                                    </td>                                    
+                                    <td valign="top" style="float: right;">
+                                       <b>{{b.total | currency}}</b>
+                                    </td>
+                                </tr>
+                            </table>
+                        </ul>
+                    </td>
+                </tr>
+            </table>
+             
+		</div>
+		<div
+			data-ng-if="balanceSheet.count == 0"
+		>
+			<div class="alert alert-warning alert-dismissible">
+				<strong>Warning!</strong> No Report.
+			</div>
+		</div>
+		<div
+			data-ng-if="!loading"
+			class="align_center"
+		>
+			<i class="fa fa-refresh fa-spin" style="font-size: 100px;"></i>
+		</div>
+	</div>
+</div>

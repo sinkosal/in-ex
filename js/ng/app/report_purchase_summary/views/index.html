@@ -1,0 +1,154 @@
+<div class="panel panel-default">
+	<div class="panel-heading">
+		Report Purchase Detail
+	</div>
+	<div class="panel-body">
+		<table class="table table-bordered">
+			<tr>
+				<td>
+					From Date:
+				</td>
+				<td>
+					<div cambodia-date-picker date-format="y-MM-dd" class="input-group">
+						<input type="text" class="form-control" data-ng-model="from_date"/>
+						<span class="input-group-btn">
+				        	<button class="btn btn-default" type="button">
+				        		<i class="fa fa-calendar"></i>
+				        	</button>
+						</span>
+				    </div>
+				</td>
+				<td>
+					To Date:
+				</td>
+				<td>
+					<div cambodia-date-picker date-format="y-MM-dd" class="input-group">
+						<input type="text" class="form-control" data-ng-model="to_date"/>
+						<span class="input-group-btn">
+				        	<button class="btn btn-default" type="button">
+				        		<i class="fa fa-calendar"></i>
+				        	</button>
+						</span>
+				    </div>
+				</td>
+				<td width="300px">
+					<ui-select
+						ng-model="vendor_list.selected"
+						theme="select2"
+						data-ng-disabled="disabled"
+						reset-search-input="false"
+						style="width: 250px;"
+					>
+						<ui-select-match placeholder="Select or Search a Vendor in the list...">
+							{{$select.selected.name}}
+						</ui-select-match>
+						<ui-select-choices
+							repeat="vendor_list in vendors track by $index"
+							refresh="refreshVendorList($select.search)"
+							refresh-delay="0"
+						>
+							<div data-ng-bind-html="vendor_list.name | highlight: $select.search"></div>
+						</ui-select-choices>
+					</ui-select>
+					<i class="fa fa-refresh" data-ng-click="vendor_list = {}"></i>
+				</td>
+				<td style="padding-top: 0px;">
+					<button class="btn btn-success margin-top" data-ng-click="init();">
+						<i class="fa fa-hourglass-half"></i>
+						Filter
+					</button>
+					<button class="btn btn-default margin-top" data-ng-click="print();">
+						<i class="fa fa-print"></i>
+						Print
+					</button>
+				</td>
+			</tr>
+		</table>
+		<div data-ng-if="purchase.count" id="print">
+			<table width="100%">
+				<tr>
+					<td align="center">
+						<img src="images/IMI.jpg" width="350px"/>
+						<h4>
+							Purchase Summary Report
+						</h4>
+						From Date: {{from_date}} To Date: {{to_date}}
+					</td>
+				</tr>
+			</table>
+			<br>
+			<br>
+			<table class="table-print">
+				<tr>
+					<th>Vendor Name</th>
+					<th>Date</th>
+					<th>Reference No</th>
+					<th>Note</th>
+					<th>Total Amount</th>
+					<th>Payment Amount</th>
+					<th>Balance</th>
+				</tr>
+				<tr data-ng-repeat="p in purchase.elements">
+					<td>
+						<span data-ng-bind="p.supplier_name"></span>
+					</td>
+					<td>
+						<span data-ng-bind="p.purchase_date"></span>
+					</td>
+					<td>
+						<span data-ng-bind="p.reff_no"></span>
+					</td>
+					<td>
+						{{p.note}}
+					</td>
+					<td>
+						{{p.total | currency}}
+					</td>
+					<td>
+						{{p.payment | currency}}
+					</td>
+					<td>
+						{{p.remain | currency}}
+					</td>
+				</tr>
+				<tr>
+					<td colspan="6" align="right">
+						<b>Sub Total:</b>
+					</td>
+					<td>
+						<b>{{sub_total | currency}}</b>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="6" align="right">
+						<b>Total Payment:</b>
+					</td>
+					<td>
+						<b>{{total_payment_amount | currency}}</b>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="6" align="right">
+						<b>Total Balance:</b>
+					</td>
+					<td>
+						<b>{{total_balance | currency}}</b>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<div
+			data-ng-if="purchase.count == 0"
+		>
+			<div class="alert alert-warning alert-dismissible">
+				<strong>Warning!</strong> No Report.
+			</div>
+		</div>
+		<div
+			data-ng-if="!loading"
+			class="align_center"
+		>
+			<i class="fa fa-refresh fa-spin" style="font-size: 100px;"></i>
+		</div>
+	</div>
+</div>

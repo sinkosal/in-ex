@@ -1,0 +1,77 @@
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <b>Users Management</b>
+    </div>
+    <div class="panel-body">
+        <button
+                class="btn btn-default"
+                data-ng-click="add();"
+                data-toggle="modal"
+                data-target="#user-popup"
+                >
+            <span class="fa fa-plus-circle"></span>
+            Add User
+        </button>
+        <br/><br/>
+        <table class="table table-bordered table-striped">
+            <thead>
+            <th>
+                Id
+            </th>
+            <th>
+                User Name
+            </th>
+            <th>
+                Role
+            </th>
+            <th width="150px">
+                Action
+            </th>
+            </thead>
+            <tr data-ng-repeat="user in users.elements">
+                <td>
+                    <span data-ng-bind="user.id"></span>
+                </td>
+                <td>
+                    <span data-ng-bind="user.user_name"></span>
+                </td>
+                <td>
+                    <span data-ng-bind="user.role"></span>
+                </td>
+                <td>
+                    <button class="btn btn-default" data-ng-click="edit(user);">
+                        <span class="fa fa-edit"></span>
+                    </button>
+                    <button
+                        class="btn btn-success"
+                        data-ng-click="updateStatus(user);"
+                        data-ng-if="user.status == 1"
+                    >
+                        <span class="fa fa-check-square-o"></span>
+                    </button>
+                    <button
+                        class="btn btn-warning"
+                        data-ng-if="user.status == 0"
+                        data-ng-click="updateStatus(user);"
+                    >
+                        <span class="fa fa-minus-square-o"></span>
+                    </button>
+                </td>
+            </tr>
+        </table>
+        <div
+            data-ng-if="users.elements == 0"
+        >
+            <div class="alert alert-warning alert-dismissible">
+                <strong>Warning!</strong> No product post.
+            </div>
+        </div>
+        <div
+                data-ng-if="!users"
+                class="align_center"
+                >
+            <i class="fa fa-refresh fa-spin" style="font-size: 100px;"></i>
+        </div>
+    </div>
+</div>
+<user:popup></user:popup>

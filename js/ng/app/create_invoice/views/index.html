@@ -1,0 +1,523 @@
+<style>
+    .scroll{
+        height: 300px;
+        width: 100%;
+        overflow: hidden;
+        border: 1px solid #ddd;
+        overflow-y: scroll;
+    }
+</style>
+
+<div class="panel panel-default" data-ng-show="!addNew">
+    <div class="panel-heading">
+        <b>Invoice List</b>
+    </div>
+    <div class="panel-body">
+        <button class="btn btn-default" data-ng-click="addNew = 'true'">
+            <i class="fa fa-plus"></i>
+            Add New
+        </button>
+        <table class="table table-bordered">
+            <tr>
+                <td>
+                    <input type="text" class="form-control" data-ng-model="invoice_no_search" placeholder="Search By Invoice No ..."/>
+                </td>
+                <td>
+                    <ui-select
+                        ng-model="customer_list.selected"
+                        theme="select2"
+                        reset-search-input="false"
+                        style="width: 250px;"
+                    >
+                        <ui-select-match placeholder="Enter An Customer Name...">
+                            {{$select.selected.full_name}}
+                        </ui-select-match>
+                        <ui-select-choices
+                                repeat="customer_list in CustomerList track by $index"
+                                refresh="refreshCustomerList($select.search)"
+                                refresh-delay="0"
+                        >
+                            <div data-ng-bind-html="customer_list.full_name | highlight: $select.search"></div>
+                        </ui-select-choices>
+                    </ui-select>
+                    <i class="fa fa-refresh" data-ng-click="customer_list = {}"></i>
+                </td>
+                <td>
+                    <select
+                        data-ng-model="doctorId"
+                        data-ng-options="doctor.id as doctor.name for doctor in doctors.elements"
+                        class="form-control"
+                    >
+                        <option value="">--Select--</option>
+                    </select>
+                </td>
+                <td>
+                    <button class="btn btn-primary" data-ng-click="search();">Search</button>
+                </td>
+            </tr>
+        </table>
+        <table class="table table-bordered">
+            <tr>
+                <th>Invoice No</th>
+                <th>Invoice Date</th>
+                <th>Customer Name</th>
+                <th>Doctor Name</th>
+                <th>Total Amount</th>
+                <th>Action</th>
+            </tr>
+            <tr data-ng-repeat="i in invoiceList.elements">
+                <td>{{i.invoice_no}}</td>
+                <td>{{i.invoice_date}}</td>
+                <td>{{i.customer_name}}</td>
+                <td>{{i.doctor_name}}</td>
+                <td>{{i.grand_total | currency}}</td>
+                <td>
+                    <button
+                        class="btn btn-success"
+                        data-ng-click="updateStatus(i);"
+                        data-ng-if="i.status == 1"
+                    >
+                        <span class="fa fa-check-square-o"></span>
+                    </button>
+                    <button
+                        class="btn btn-warning"
+                        data-ng-if="i.status == 0"
+                        data-ng-click="updateStatus(i);"
+                    >
+                        <span class="fa fa-close"></span>
+                    </button>
+                </td>
+            </tr>
+        </table>
+        <div
+            data-ng-if="invoiceList.count == 0"
+        >
+            <div class="alert alert-warning alert-dismissible">
+                <strong>Warning!</strong> No Data Entry.
+            </div>
+        </div>
+        <div
+            data-ng-if="!invoiceList"
+            class="align_center"
+        >
+            <i class="fa fa-refresh fa-spin" style="font-size: 100px;"></i>
+        </div>
+        <div
+            class="panel-footer"
+            data-ng-show="totalItems > 20"
+        >
+            <pagination
+                total-items="totalItems"
+                ng-model="currentPage"
+                ng-change="pageChanged()"
+                max-size="5"
+                items-per-page="20"
+                boundary-links="true"
+            ></pagination>
+        </div>
+    </div>
+</div>
+
+<!-- add new form -->
+<div class="panel panel-default" data-ng-show="addNew">
+    <div class="panel-heading">
+        <b>Create Invoice</b>
+    </div>
+    <div class="panel-body">
+        <button class="btn btn-default" data-ng-click="back();">
+            <i class="fa fa-reply"></i>
+            Back
+        </button>
+        <button
+            class="btn btn-success"
+            data-ng-click="save();"
+            data-ng-disabled="disable"
+        >
+            <span class="fa fa-save"></span>
+            Save
+        </button>
+        <table width="100%">
+            <tr>
+                <td width="100px">
+                    <h4>Customer:</h4>
+                </td>
+                <td width="100px">
+                    Reference No:
+                </td>
+                <td>
+                    <input type="text" class="form-control" data-ng-model="reference_no" placeholder="reference no ..."/>
+                </td>
+                <td width="150px" align="right">
+                    Make Appointment:
+                </td>
+                <td width="10px"></td>
+                <td>
+                    <button
+                        class="btn btn-primary"
+                        data-ng-click="makeAppointment();"
+                        data-toggle="modal"
+                        data-target="#appointment-popup"
+                    >
+                        <span class="fa fa-plus-circle"></span>
+                        Appointment
+                    </button>
+                </td>
+            </tr>
+        </table>
+        <table class="table table-bordered">
+            <tr>
+                <td>
+                    Name:
+                </td>
+                <td>
+                    <ui-select
+                        ng-model="customer_list.selected"
+                        theme="select2"
+                        data-ng-change="changeCustomer(customer_list);"
+                        data-ng-disabled="disabled"
+                        reset-search-input="false"
+                        style="width: 100%;"
+                    >
+                        <ui-select-match placeholder="Enter An Customer Name...">
+                            {{$select.selected.full_name}}
+                        </ui-select-match>
+                        <ui-select-choices
+                            repeat="customer_list in CustomerList track by $index"
+                            refresh="refreshCustomerList($select.search)"
+                            refresh-delay="0"
+                        >
+                            <div data-ng-bind-html="customer_list.full_name | highlight: $select.search"></div>
+                        </ui-select-choices>
+                    </ui-select>
+                </td>
+                <td>
+                    Customer Type:
+                </td>
+                <td>
+                    <select
+                        data-ng-model="customer_list.selected.customer_type[0].id"
+                        data-ng-options="customer_type as customer_type.name for customer_type in customerType.elements"
+                        data-ng-init="customer_list.selected.customer_type[0].id == customer_type.id"
+                        class="form-control"
+                        data-ng-change="changeService(customer_list.selected.customer_type[0].id);"
+                        required
+                    >
+                        <option value="">--Select--</option>
+                    </select>
+                </td>
+                <td>
+                    Doctor:
+                </td>
+                <td>
+                    <select
+                        data-ng-model="customer_list.selected.doctor_fields[0].id"
+                        data-ng-options="doctor as doctor.name for doctor in doctors.elements"
+                        data-ng-init="customer_list.selected.doctor_fields[0].id == doctor  "
+                        data-ng-change="changeDoctor(customer_list.selected.doctor_fields[0].id);"
+                        class="form-control"
+                        required
+                    >
+                        <option value="">--Select--</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Invoice No:
+                </td>
+                <td>
+                    <input type="text" class="form-control" data-ng-model="invoice_no" readonly/>
+                </td>
+                <td>
+                    Tel:
+                </td>
+                <td>
+                    <input type="text" class="form-control" data-ng-model="customer_list.selected.tel" data-ng-disabled="true"/>
+                </td>
+                <td>
+                    Invoice Date:
+                </td>
+                <td>
+                    <div cambodia-date-picker date-format="y-MM-dd" class="input-group">
+                        <input type="text" 
+                            class="form-control" 
+                            data-ng-model="invoice_date" 
+                            data-ng-disabled=" role != 'Admin'" 
+                            data-ng-change="changeInvoiceNo();"
+                        />
+                        <span class="input-group-btn">
+                            <button class="btn btn-default" type="button">
+                                <i class="fa fa-calendar"></i>
+                            </button>
+                        </span>
+                    </div>
+                </td>
+            </tr>
+        </table>
+        <h4>Service:</h4>
+        <table class="table table-bordered">
+            <tr>
+                <td>
+                    <ui-select
+                        ng-model="service_list.selected"
+                        theme="select2"
+                        data-ng-disabled="disabled"
+                        reset-search-input="false"
+                        data-ng-change="selectService(service_list.selected);"
+                        style="width: 250px;"
+                    >
+                        <ui-select-match placeholder="Enter An Service Name...">
+                            {{$select.selected.service_name}}
+                        </ui-select-match>
+                        <ui-select-choices
+                            repeat="service_list in serviceList track by $index"
+                            refresh="refreshServiceList($select.search)"
+                            refresh-delay="0"
+                        >
+                            <div data-ng-bind-html="service_list.service_name | highlight: $select.search"></div>
+                        </ui-select-choices>
+                    </ui-select>
+                </td>
+                <td>
+                    <input type="text" class="form-control" data-ng-model="dent_order" placeholder="Dent Order ..."/>
+                </td>
+                <td>
+                    <input type="text" class="form-control" data-ng-model="color" placeholder="Color ..."/>
+                </td>
+                <td>
+                    <input
+                        type="text"
+                        class="form-control"
+                        data-ng-model="service_copy.price"
+                        placeholder="Price ..."
+                        data-ng-disabled="disable_price"
+                    />
+                </td>
+                <td>
+                    <input
+                        type="text"
+                        class="form-control"
+                        data-ng-model="unit"
+                        only-numbers
+                        placeholder="Unit ..."/>
+                </td>
+                <td>
+                    <button class="btn btn-primary" data-ng-click="add();">
+                        <span class="fa fa-plus-circle"></span>
+                        Add
+                    </button>
+                </td>
+            </tr>
+        </table>
+        <div class="scroll">
+            <table class="table table-bordered table-striped">
+                <thead>
+                <th>
+                    No
+                </th>
+                <th>
+                    Service Name
+                </th>
+                <th>
+                    Dent Color
+                </th>
+                <th>
+                    Color
+                </th>
+                <th>
+                    Price
+                </th>
+                <th>
+                    Unit
+                </th>
+                <th>
+                    Total
+                </th>
+                <th width="80px">
+                    Action
+                </th>
+                </thead>
+                <tr data-ng-repeat="invoice in invoices">
+                    <td>
+                        <span data-ng-bind="$index + 1"></span>
+                    </td>
+                    <td>
+                        <span data-ng-bind="invoice.service_name"></span>
+                    </td>
+                    <td>
+                        <input type="text" class="form-control" data-ng-model="invoice.dent_order"/>
+                    </td>
+                    <td>
+                        <input type="text" class="form-control" data-ng-model="invoice.color"/>
+                    </td>
+                    <td>
+                        <span data-ng-bind="invoice.unit_price | currency "></span>
+                    </td>
+                    <td>
+                        <input
+                            type="text"
+                            class="form-control"
+                            only-numbers
+                            data-ng-model="invoice.qty"
+                            data-ng-change="changeUnit(invoice);"
+                        />
+                    </td>
+                    <td>
+                        {{invoice.unit_price * invoice.qty | currency}}
+                    </td>
+                    <td>
+                        <button
+                            class="btn btn-danger"
+                            data-ng-click="remove($index);"
+                        >
+                            <span class="fa fa-close"></span>
+                        </button>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <table class="table table-bordered">
+            <tr>
+                <td>
+                    Note:
+                </td>
+                <td rowspan="5" width="50%">
+                    <textarea
+                        data-ng-model="note"
+                        style="height: 100%;"
+                        placeholder="Note ..."
+                        class="form-control"
+                    >
+                    </textarea>
+                </td>
+                <td>
+                    <table class="table table-bordered">
+                        <tr valign="right">
+                            <td align="right" width="40%">
+                                Sub Total:
+                            </td>
+                            <td>
+                                <span
+                                    data-ng-bind="sub_total | currency">
+                                </span>
+                            </td>
+                        </tr>
+                        <tr valign="right">
+                            <td align="right" rowspan="2">
+                                Discount:
+                            </td>
+                            <td>
+                                Dollar($)
+                                <input
+                                    type="checkbox"
+                                    data-ng-change="checkTypeDiscount('dollar');"
+                                    data-ng-model="dollar"
+                                    value="dollar"
+                                />
+                                Percent(%)
+                                <input
+                                    type="checkbox"
+                                    data-ng-change="checkTypeDiscount('percent');"
+                                    data-ng-model="percent"
+                                    value="percent"
+                                />
+                            </td>
+                        </tr>
+                        <tr valign="right">
+                            <td>
+                                <input
+                                    class="form-control"
+                                    data-ng-change="inputDiscount();"
+                                    data-ng-disabled="!inputDiscountAmount"
+                                    data-ng-model="discount"
+                                    placeholder="Discount ..."
+                                />
+                            </td>
+                        </tr>
+                        <tr valign="right">
+                            <td align="right">
+                                Total Discount:
+                            </td>
+                            <td>
+                                <span data-ng-bind="total_discount | currency"></span>
+                            </td>
+                        </tr>
+                        <tr valign="right">
+                            <td align="right">
+                                Grand Total:
+                            </td>
+                            <td>
+                                <span
+                                    data-ng-bind="grand_total | currency">
+                                </span>
+                            </td>
+                        </tr>
+                        <tr valign="right">
+                            <td align="right">
+                                Payment Method:
+                            </td>
+                            <td>
+                                <select
+                                    class="form-control"
+                                    data-ng-options="payment_method for payment_method in ['Cash', 'ACLIDA', 'CPB']"
+                                    data-ng-init="payment_method == payment_method"
+                                    data-ng-model="payment_method"
+                                >
+                                </select>
+                                <div data-ng-show="payment_method == 'ACLIDA' || payment_method == 'CPB'">
+                                    <br/>
+                                    <input type="text" data-ng-model="bank_charge" class="form-control" placeholder="Bank Charge..."/>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right">
+                                Payment:
+                            </td>
+                            <td>
+                                <input
+                                    class="form-control"
+                                    data-ng-change="inputMoney();"
+                                    only-numbers
+                                    data-ng-model="input_money"
+                                    placeholder="Payment ..."
+                                >
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right">
+                                Remaining:
+                            </td>
+                            <td>
+                                <span data-ng-bind="remaining | currency"></span>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+        <table width="100%">
+            <tr>
+                <td align="right">
+                    <button
+                        class="btn btn-success"
+                        data-ng-click="save();"
+                        data-ng-disabled="disable"
+                    >
+                        <span class="fa fa-save"></span>
+                        Save
+                    </button>
+                </td>
+            </tr>
+        </table>
+        <div
+            data-ng-if="invoiceList.lenght == 0"
+        >
+            <div class="alert alert-warning alert-dismissible">
+                <strong>Warning!</strong> No Item.
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+<create:invoice:popup></create:invoice:popup>

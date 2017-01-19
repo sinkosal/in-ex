@@ -1,0 +1,70 @@
+<div
+    class="modal fade"
+    id="popup"
+    data-keyboard="false"
+    data-backdrop="static"
+>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4>
+                    <label>Edit Product</label>
+                </h4>
+            </div>
+            <div class="modal-body">{{product_filter.selected.products_quantity}}
+                <table class="table table-bordered">
+                    <tr>
+                        <td width="110px">
+                            Product Name:
+                        </td>
+                        <td>
+                            <input type="text" class="form-control" data-ng-model="editProduct.product_name"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Description:
+                        </td>
+                        <td>
+                            <input type="text" class="form-control" data-ng-model="editProduct.description"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Qty:
+                        </td>
+                        <td>
+                            <input type="text" class="form-control" only-numbers data-ng-model="editProduct.qty"/>
+                            <div
+                                data-ng-if=" editProduct.qty >= qty_in_hand"
+                                class="alert alert-warning"
+                            >
+                                Out Off Stock You Have Only {{qty_in_hand}} Unit In Stock.
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Price:
+                        </td>
+                        <td>
+                            <input type="text" class="form-control" only-numbers data-ng-model="editProduct.unit_price"/>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button
+                    class="btn btn-primary"
+                    data-dismiss="modal"
+                    data-ng-click="getTotal();"
+                    data-ng-disabled=" editProduct.qty >= qty_in_hand || editProduct.qty == ''  "
+                >
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+

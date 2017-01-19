@@ -1,0 +1,132 @@
+<form data-ng-submit="save();" name="myForm">
+	<div
+			class="modal fade"
+			id="doctor-list-popup"
+			data-keyboard="false"
+			data-backdrop="static"
+			>
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button
+							type="button"
+							class="close"
+							data-dismiss="modal"
+							data-ng-click="clear();"
+							>
+						<span>&times;</span>
+					</button>
+					<h4>
+						<label>Doctor List</label>
+					</h4>
+				</div>
+				<div class="modal-body">
+					<div class="tab-content">
+						<table class="table table-bordered">
+							<tr>
+								<td>
+									Type:
+								</td>
+								<td>
+									<select
+										data-ng-model="doctor_type_id"
+										data-ng-options="doctor_type.id as doctor_type.name for doctor_type in doctorType.elements"
+										data-ng-init="doctor_type_id == doctor_type.id"
+										class="form-control"
+										required
+									>
+										<option value="">--Select--</option>
+									</select>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									Name:
+								</td>
+								<td>
+									<input
+										type="text"
+										class="form-control"
+										data-ng-model="name"
+										required="required"
+									/>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									Sex:
+								</td>
+								<td>
+									<select
+										class="form-control"
+										data-ng-options="gender for gender in ['Male', 'Female']"
+										data-ng-init="sex == gender"
+										data-ng-model="sex"
+									>
+										<option value="">--Select--</option>
+									</select>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									Address:
+								</td>
+								<td>
+									<input
+										type="text"
+										class="form-control"
+										data-ng-model="address"
+										required="required"
+									/>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									Phone:
+								</td>
+								<td>
+									<input
+										type="text"
+										class="form-control"
+										data-ng-model="phone"
+										required="required"
+										only-numbers
+									/>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									Detail:
+								</td>
+								<td>
+									<input
+										type="text"
+										class="form-control"
+										data-ng-model="detail"
+									/>
+								</td>
+							</tr>
+						</table>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button
+						class="btn btn-default"
+						data-dismiss="modal"
+						data-ng-click="clear();"
+					>
+						Close
+					</button>
+					<button
+							class="btn btn-primary"
+							data-ng-disabled="!disable"
+							>
+						Save
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</form>
+
+

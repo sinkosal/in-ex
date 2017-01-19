@@ -1,0 +1,171 @@
+<div class="panel panel-default">
+	<div class="panel-heading">
+		Report Appointment
+	</div>
+	<div class="panel-body">
+		<table class="table table-bordered">
+			<tr>
+				<td>
+					From Date:
+				</td>
+				<td>
+					<div cambodia-date-picker date-format="y-MM-dd" class="input-group">
+						<input type="text" class="form-control" data-ng-model="from_date"/>
+						<span class="input-group-btn">
+				        	<button class="btn btn-default" type="button">
+				        		<i class="fa fa-calendar"></i>
+				        	</button>
+						</span>
+				    </div>
+				</td>
+				<td>
+					To Date:
+				</td>
+				<td>
+					<div cambodia-date-picker date-format="y-MM-dd" class="input-group">
+						<input type="text" class="form-control" data-ng-model="to_date"/>
+						<span class="input-group-btn">
+				        	<button class="btn btn-default" type="button">
+				        		<i class="fa fa-calendar"></i>
+				        	</button>
+						</span>
+				    </div>
+				</td>
+				<td width="235px">
+					<ui-select
+						ng-model="invoice_list.selected"
+						theme="select2"
+						data-ng-disabled="disabled"
+						reset-search-input="false"
+						style="width: 190px;"
+					>
+						<ui-select-match placeholder="Select or Search a Invoice in the list...">
+							{{$select.selected.invoice_no}}
+						</ui-select-match>
+						<ui-select-choices
+							repeat="invoice in invoices track by $index"
+							refresh="refreshInvoiceList($select.search)"
+							refresh-delay="0"
+						>
+							<div data-ng-bind-html="invoice.invoice_no | highlight: $select.search"></div>
+						</ui-select-choices>
+					</ui-select>
+					<i class="fa fa-refresh" data-ng-click="invoice_list = {}"></i>
+				</td>
+				<td>
+					<ui-select
+						ng-model="customer_list.selected"
+						theme="select2"
+						reset-search-input="false"
+						style="width: 200px;"
+					>
+						<ui-select-match placeholder="Enter An Customer Name...">
+							{{$select.selected.full_name}}
+						</ui-select-match>
+						<ui-select-choices
+								repeat="customer_list in customerList track by $index"
+								refresh="refreshCustomerList($select.search)"
+								refresh-delay="0"
+						>
+							<div data-ng-bind-html="customer_list.full_name | highlight: $select.search"></div>
+						</ui-select-choices>
+					</ui-select>
+					<i class="fa fa-refresh" data-ng-click="customer_list = {}"></i>
+				</td>
+				<td>
+					<button class="btn btn-success margin-top" data-ng-click="init();">
+						<i class="fa fa-hourglass-half"></i>
+						Filter
+					</button>
+					<button class="btn btn-default margin-top" data-ng-click="print();">
+						<i class="fa fa-print"></i>
+						Print
+					</button>
+				</td>
+			</tr>
+		</table>
+		<div data-ng-if="appointmentList.count" id="print">
+			<table width="100%">
+				<tr>
+					<td align="center">
+						<img src="images/IMI.jpg" width="350px"/>
+						<h4>
+							Appointment Report
+						</h4>
+						Total Record: {{totalItems}}
+					</td>
+				</tr>
+			</table>
+			<table width="100%">
+				<tr data-ng-repeat="c in appointmentList.elements track by c.id">
+					<td>
+						<table class="table-print">
+							<tr rowspan="2">
+								<td rowspan="2">
+									{{$index + 1}}
+								</td>
+								<td style="background-color: #26a69a;padding: 10px;">
+									<b>
+										Customer Name:
+									</b>
+									<span data-ng-bind="c.customer_detail[0].full_name"></span>,
+									<b>
+										DOB:
+									</b>
+									<span data-ng-bind="c.customer_detail[0].dob"></span>,
+									<b>
+										Gender:
+									</b>
+									<span data-ng-bind="c.customer_detail[0].sex"></span>,
+									<b>
+										Country:
+									</b>
+									<span data-ng-bind="c.customer_detail[0].country"></span>,
+									<b>
+										Tel:
+									</b>
+									<span data-ng-bind="c.customer_detail[0].tel"></span>,
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<table width="100%" data-ng-if="c.detail.length > 0">
+										<tr>
+											<th width="30px">No</th>
+											<th width="80px">Date</th>
+											<th>Note</th>
+										</tr>
+										<tr data-ng-repeat="a in c.detail">
+											<td>{{$index + 1}}</td>
+											<td>{{a.date}}</td>
+											<td>{{a.note}}</td>
+										</tr>
+									</table>
+									<div
+										data-ng-if="c.detail.length <= 0"
+										class="alert alert-warning"
+									>
+										No Appointment.
+									</div>
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<div
+			data-ng-if="appointmentList.count == 0"
+		>
+			<div class="alert alert-warning alert-dismissible">
+				<strong>Warning!</strong> No Report.
+			</div>
+		</div>
+		<div
+			data-ng-if="!loading"
+			class="align_center"
+		>
+			<i class="fa fa-refresh fa-spin" style="font-size: 100px;"></i>
+		</div>
+	</div>
+</div>

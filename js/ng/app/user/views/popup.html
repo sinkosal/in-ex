@@ -1,0 +1,94 @@
+<form data-ng-submit="save();" name="myForm">
+<div 
+	class="modal fade"
+	id="user-popup"
+	data-keyboard="false"
+	data-backdrop="static"
+>
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button 
+					type="button" 
+					class="close" 
+					data-dismiss="modal"
+					data-ng-click="closeForm();"
+				>
+					<span>&times;</span>
+				</button>
+				<h4> 
+					<label>User</label>
+				</h4>
+	      	</div>
+			<div class="modal-body">
+				<div class="tab-content">
+					<table class="table table-bordered">
+						<tr>
+							<td>
+								UserName:
+							</td>
+							<td>
+								<input
+									type="text"
+									class="form-control"
+									data-ng-model="user_name"
+									required="required"
+								/>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								Password:
+							</td>
+							<td>
+								<input
+									type="password"
+									class="form-control"
+									data-ng-model="user_password"
+									required
+								/>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								Role
+							</td>
+							<td>
+								<select
+									class="form-control"
+									data-ng-model="role"
+									data-ng-options="role for role in ['Admin', 'Receptionist']"
+									data-ng-init="role == role"
+									required
+								>
+									<option value="">--Select--</option>
+								</select>
+							</td>
+						</tr>
+					</table>
+					<div data-ng-if="error" class="alert alert-warning">
+						<b>Warning: </b> Duplicate User Name.
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button 
+					class="btn btn-default"
+					data-ng-click="close();"
+					data-dismiss="modal"
+				>
+					Close
+				</button>
+				<button 
+					class="btn btn-primary"
+					data-ng-disabled="!disable"
+				>
+					Save
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+</form>
+
+

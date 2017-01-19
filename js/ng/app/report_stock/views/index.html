@@ -1,0 +1,196 @@
+<div class="panel panel-default">
+	<div class="panel-heading">
+		Report Stock Detail
+	</div>
+	<div class="panel-body">
+		<table class="table table-bordered">
+			<tr>
+				<td>
+					Product Name:
+				</td>
+				<td>
+				<td width="300px">
+					<ui-select
+						ng-model="product_list.selected"
+						theme="select2"
+						data-ng-disabled="disabled"
+						reset-search-input="false"
+						style="width: 250px;"
+					>
+						<ui-select-match placeholder="Select or Search Product Name in the list...">
+							{{$select.selected.products_name}}
+						</ui-select-match>
+						<ui-select-choices
+							repeat="product_list in productList track by $index"
+							refresh="refreshProductList($select.search)"
+							refresh-delay="2"
+						>
+							<div data-ng-bind-html="product_list.products_name | highlight: $select.search"></div>
+						</ui-select-choices>
+					</ui-select>
+					<i class="fa fa-refresh" data-ng-click="product_list = {}"></i>
+				</td>
+				</td>
+				<td>
+					Product Type:
+				</td>
+				<td width="300px">
+					<ui-select
+						ng-model="product_type_list.selected"
+						theme="select2"
+						data-ng-disabled="disabled"
+						reset-search-input="false"
+						style="width: 250px;"
+					>
+						<ui-select-match placeholder="Select or Search Product Type in the list...">
+							{{$select.selected.name}}
+						</ui-select-match>
+						<ui-select-choices
+							repeat="product_type_list in productType track by $index"
+							refresh="refreshProductTypeList($select.search)"
+							refresh-delay="2"
+						>
+							<div data-ng-bind-html="product_type_list.name | highlight: $select.search"></div>
+						</ui-select-choices>
+					</ui-select>
+					<i class="fa fa-refresh" data-ng-click="product_type_list = {}"></i>
+				</td>
+				<td>
+					<select class="form-control" data-ng-model="status">
+						<option value="">--Filter Status--</option>
+						<option data-ng-value="1">Active</option>
+						<option data-ng-value="0">Inactive</option>
+					</select>
+				</td>
+				<td style="padding-top: 0px;">
+					<button class="btn btn-success margin-top" data-ng-click="init();">
+						<i class="fa fa-hourglass-half"></i>
+						Filter
+					</button>
+					<button class="btn btn-default margin-top" data-ng-click="print();">
+						<i class="fa fa-print"></i>
+						Print
+					</button>
+				</td>
+			</tr>
+		</table>
+		<div data-ng-if="products.count" id="print">
+			<table width="100%">
+				<tr>
+					<td align="center">
+						<img src="images/IMI.jpg" width="350px"/>
+						<h4>
+							Stock Report
+						</h4>
+					</td>
+				</tr>
+			</table>
+			<table class="table table-bordered">
+				<tr style="background-color: #F7F7F7;">
+					<th>
+						No
+					</th>
+					<th>
+						Item
+					</th>
+					<th>
+						Type
+					</th>
+
+					<th>
+						Barcode
+					</th>
+					<th>
+						Description
+					</th>
+					<th>
+						Qty On Hand
+					</th>
+					<th>
+						Price In
+					</th>
+					<th>
+						Price Out
+					</th>
+					<th>
+						Total Price In
+					</th>
+					<th>
+						Total Price Out
+					</th>
+				</tr>
+				<tr data-ng-repeat="item in products.elements">
+					<td>
+						{{$index +1}}
+					</td>
+					<td>
+						{{item.products_name}}
+					</td>
+					<td>
+						{{item.products_type_fields[0].name}}
+					</td>
+					<td>
+						{{item.barcode}}
+					</td>
+					<td>
+						{{item.products_description}}
+					</td>
+					<td>
+						{{item.products_quantity}}
+					</td>
+					<td>
+						{{item.products_price_in | currency}}
+					</td>
+					<td>
+						{{item.products_price_out | currency}}
+					</td>
+					<td>
+						{{ item.products_quantity * item.products_price_in | currency}}
+					</td>
+					<td>
+						{{ item.products_quantity * item.products_price_out | currency}}
+					</td>
+				</tr>
+				<tr>
+					<td colspan="5" align="right">
+						<b>Total :</b>
+					</td>
+					<td>
+						<b>{{total_qty}}</b>
+
+					</td>
+				<!--</tr>-->
+				<!--<tr>-->
+					<!--<td align="right">-->
+						<!--<b>Total Price In:</b>-->
+					<!--</td>-->
+					<td>
+						<b>{{total_price_in | currency}}</b>
+					</td>
+					<td>
+						<b>{{total_price_out | currency}}</b>
+					</td>
+					<td>
+						<b>{{ total_product_price_in | currency}}</b>
+					</td>
+					<td>
+						<b>{{ total_product_price_out | currency}}</b>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<div
+			data-ng-if="products.count == 0"
+		>
+			<div class="alert alert-warning alert-dismissible">
+				<strong>Warning!</strong> No Report.
+			</div>
+		</div>
+		<div
+			data-ng-if="!loading"
+			class="align_center"
+		>
+			<i class="fa fa-refresh fa-spin" style="font-size: 100px;"></i>
+		</div>
+	</div>
+</div>

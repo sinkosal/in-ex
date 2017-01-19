@@ -1,0 +1,124 @@
+<div class="panel panel-default">
+	<div class="panel-heading">
+		Report Sale Summary
+	</div>
+	<div class="panel-body">
+		<table class="table table-bordered">
+			<tr>
+				<td>
+					From Date:
+				</td>
+				<td>
+					<div cambodia-date-picker date-format="y-MM-dd" class="input-group">
+						<input type="text" class="form-control" data-ng-model="from_date"/>
+						<span class="input-group-btn">
+				        	<button class="btn btn-default" type="button">
+				        		<i class="fa fa-calendar"></i>
+				        	</button>
+						</span>
+				    </div>
+				</td>
+				<td>
+					To Date:
+				</td>
+				<td>
+					<div cambodia-date-picker date-format="y-MM-dd" class="input-group">
+						<input type="text" class="form-control" data-ng-model="to_date"/>
+						<span class="input-group-btn">
+				        	<button class="btn btn-default" type="button">
+				        		<i class="fa fa-calendar"></i>
+				        	</button>
+						</span>
+				    </div>
+				</td>
+				<td style="padding-top: 0px;">
+					<button class="btn btn-success margin-top" data-ng-click="init();">
+						<i class="fa fa-hourglass-half"></i>
+						Filter
+					</button>
+					<button class="btn btn-default margin-top" data-ng-click="print();">
+						<i class="fa fa-print"></i>
+						Print
+					</button>
+				</td>
+			</tr>
+		</table>
+		<div data-ng-if="stockOut.count" id="print">
+			<table width="100%">
+				<tr>
+					<td align="center">
+						<img src="images/IMI.jpg" width="350px"/>
+						<h4>
+							Sale Summary Report
+						</h4>
+						From Date: {{from_date}} To Date: {{to_date}}
+					</td>
+				</tr>
+			</table>
+			<br/>
+			<table style="width: 100%;border-collapse: collapse;border-spacing: 0px;border: 1px solid #000000;">
+				<tr>
+					<th style="background: #ddd;text-align: center;border: 1px solid #000000;padding: 5px;">
+						No
+					</th>
+					<th style="background: #ddd;text-align: center;border: 1px solid #000000;padding: 5px;">
+						Request Name
+					</th>
+					<th style="background: #ddd;text-align: center;border: 1px solid #000000;padding: 5px;">
+						Approve Name
+					</th>
+					<th style="background: #ddd;text-align: center;border: 1px solid #000000;padding: 5px;">
+						Delivery To
+					</th>
+					<th style="background: #ddd;text-align: center;border: 1px solid #000000;padding: 5px;">
+						Sale Date
+					</th>
+					<th style="background: #ddd;text-align: center;border: 1px solid #000000;padding: 5px;">
+						Total
+					</th>
+				</tr>
+				<tr data-ng-repeat="item in stockOut.elements">
+					<td style="border: 1px solid #000000;padding: 1px;">
+						{{$index +1}}
+					</td>
+					<td style="border: 1px solid #000000;padding: 1px;">
+						{{item.request_by_name}}
+					</td>
+					<td style="border: 1px solid #000000;padding: 1px;">
+						{{item.approve_by_name}}
+					</td>
+					<td style="border: 1px solid #000000;padding: 1px;">
+						{{item.delivery_to}}
+					</td>
+					<td style="border: 1px solid #000000;padding: 1px;">
+						{{item.stock_out_date}}
+					</td>
+					<td style="border: 1px solid #000000;padding: 1px;">
+						{{item.grand_total | currency}}
+					</td>
+				</tr>
+				<tr>
+					<td style="border: 1px solid #000000;padding: 1px;" colspan="5" align="right">
+						<b>Grand Total:</b>
+					</td>
+					<td>
+						<b>{{grand_total | currency}}</b>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<div
+			data-ng-if="stockOut.count == 0"
+		>
+			<div class="alert alert-warning alert-dismissible">
+				<strong>Warning!</strong> No Report.
+			</div>
+		</div>
+		<div
+			data-ng-if="!loading"
+			class="align_center"
+		>
+			<i class="fa fa-refresh fa-spin" style="font-size: 100px;"></i>
+		</div>
+	</div>
+</div>

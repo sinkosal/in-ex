@@ -1,0 +1,157 @@
+<div class="panel panel-default">
+	<div class="panel-heading">
+		General Ledger Report
+	</div>
+	<div class="panel-body">
+		<table class="table table-bordered">
+			<tr>
+				<td>
+					From Date:
+				</td>
+				<td>
+					<div cambodia-date-picker date-format="y-MM-dd" class="input-group">
+						<input type="text" class="form-control" data-ng-model="from_date"/>
+						<span class="input-group-btn">
+				        	<button class="btn btn-default" type="button">
+				        		<i class="fa fa-calendar"></i>
+				        	</button>
+						</span>
+				    </div>
+				</td>
+				<td width="100px">
+					To Date:
+				</td>
+				<td>
+					<div cambodia-date-picker date-format="y-MM-dd" class="input-group">
+						<input type="text" class="form-control" data-ng-model="to_date"/>
+						<span class="input-group-btn">
+				        	<button class="btn btn-default" type="button">
+				        		<i class="fa fa-calendar"></i>
+				        	</button>
+						</span>
+				    </div>
+				</td>
+				<td>
+					<ui-select
+						ng-model="account_list.selected"
+						theme="select2"
+						data-ng-disabled="disabled"
+						reset-search-input="false"
+						style="width: 250px;"
+					>
+						<ui-select-match placeholder="Enter An Account Name...">
+							{{$select.selected.account_code}}
+						</ui-select-match>
+						<ui-select-choices
+							repeat="account_list in accountList track by $index"
+							refresh="refreshAccountList($select.search)"
+							refresh-delay="0"
+						>
+							<span data-ng-bind-html="account_list.account_code | highlight: $select.search"></span>,
+							<span data-ng-bind-html="account_list.name | highlight: $select.search"></span>,
+							<span data-ng-bind-html="account_list.detail[0].name | highlight: $select.search"></span>
+						</ui-select-choices>
+					</ui-select>
+					<i class="fa fa-refresh" data-ng-click="account_list = {}"></i>
+				</td>
+				<td>
+					<ui-select
+						ng-model="vendor_list.selected"
+						theme="select2"
+						data-ng-disabled="disabled"
+						reset-search-input="false"
+						style="width: 250px;"
+					>
+						<ui-select-match placeholder="Enter An Supplier Name...">
+							{{$select.selected.name}}
+						</ui-select-match>
+						<ui-select-choices
+								repeat="vendor_list in vendorList track by $index"
+								refresh="refreshVendorList($select.search)"
+								refresh-delay="0"
+						>
+							<span data-ng-bind-html="vendor_list.name | highlight: $select.search"></span>
+						</ui-select-choices>
+					</ui-select>
+					<i class="fa fa-refresh" data-ng-click="vendor_list = {}"></i>
+				</td>
+				<td>
+					<button class="btn btn-success margin-top" data-ng-click="init();">
+						<i class="fa fa-hourglass-half"></i>
+						Filter
+					</button>
+					<button class="btn btn-default margin-top" data-ng-click="print();">
+						<i class="fa fa-print"></i>
+						Print
+					</button>
+				</td>
+			</tr>
+		</table>
+		<div data-ng-if="ledger.count" id="print">
+			<table width="100%">
+				<tr>
+					<td align="center">
+						<img src="images/IMI.jpg" width="350px"/>
+						<h4>
+							General Ledger
+						</h4>
+						From: {{from_date}} To: {{to_date}}
+					</td>
+				</tr>
+			</table>
+			<br/><br/>
+			<table class="table-print">
+				<tr>
+					<th>Account Id<br/>Account Description</th>
+					<th>Date</th>
+					<th>Reference</th>
+					<th>Trans Description</th>
+					<th>Debit</th>
+					<th>Credit</th>
+				</tr>
+				<tr data-ng-repeat="j in ledger.elements">
+					<td>{{j.account_id}}<br/>{{j.account_name}}</td>
+					<td>
+						<span data-ng-bind="formatDate(j.trans_date) | date:'dd-MMMM-yyyy'"></span>
+					</td>
+					<td>{{j.reference_id}}</td>
+					<td>{{j.note}}</td>
+					<td>{{j.debit | currency}}</td>
+					<td>{{j.credit | currency}}</td>
+				</tr>
+				<tr>
+					<td colspan="4" align="right">
+						<b>Total</b>
+					</td>
+					<td>
+						<b>{{total_debit | currency}}</b>
+					</td>
+					<td>
+						<b>{{total_credit | currency}}</b>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="4" align="right">
+						<b>Total Balance</b>
+					</td>
+					<td colspan="2">
+						<b>{{total_type_of_balance | currency}}</b>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<div
+			data-ng-if="ledger.count == 0"
+		>
+			<div class="alert alert-warning alert-dismissible">
+				<strong>Warning!</strong> No Report.
+			</div>
+		</div>
+		<div
+			data-ng-if="!loading"
+			class="align_center"
+		>
+			<i class="fa fa-refresh fa-spin" style="font-size: 100px;"></i>
+		</div>
+	</div>
+</div>

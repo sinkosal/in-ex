@@ -1,0 +1,185 @@
+<div class="panel panel-default">
+	<div class="panel-heading">
+		Report Staff
+	</div>
+	<div class="panel-body">
+		<table class="table table-bordered">
+			<tr>
+				<td>
+					Start Contract:
+				</td>
+				<td>
+					<div cambodia-date-picker date-format="y-MM-dd" class="input-group">
+						<input type="text" class="form-control" data-ng-model="from_date"/>
+						<span class="input-group-btn">
+				        	<button class="btn btn-default" type="button">
+				        		<i class="fa fa-calendar"></i>
+				        	</button>
+						</span>
+				    </div>
+				</td>
+				<td>
+					End Contract:
+				</td>
+				<td>
+					<div cambodia-date-picker date-format="y-MM-dd" class="input-group">
+						<input type="text" class="form-control" data-ng-model="to_date"/>
+						<span class="input-group-btn">
+				        	<button class="btn btn-default" type="button">
+				        		<i class="fa fa-calendar"></i>
+				        	</button>
+						</span>
+				    </div>
+				</td>
+				<td width="300px">
+					<ui-select
+						ng-model="staff_list.selected"
+						theme="select2"
+						data-ng-disabled="disabled"
+						reset-search-input="false"
+						style="width: 250px;"
+					>
+						<ui-select-match placeholder="Select or Search a Staff in the list...">
+							{{$select.selected.name}}
+						</ui-select-match>
+						<ui-select-choices
+							repeat="staff_list in staffs track by $index"
+							refresh="refreshStaffList($select.search)"
+							refresh-delay="0"
+						>
+							<div data-ng-bind-html="staff_list.name | highlight: $select.search"></div>
+						</ui-select-choices>
+					</ui-select>
+					<i class="fa fa-refresh" data-ng-click="staff_list = {}"></i>
+				</td>
+				<td rowspan="2" width="180px">
+					<button class="btn btn-success margin-top" data-ng-click="init();">
+						<i class="fa fa-hourglass-half"></i>
+						Filter
+					</button>
+					<button class="btn btn-default margin-top" data-ng-click="print();">
+						<i class="fa fa-print"></i>
+						Print
+					</button>
+				</td>
+			</tr>
+		</table>
+		<div data-ng-if="staff.count" id="print">
+			<table width="100%">
+				<tr>
+					<td align="center">
+						<img src="images/IMI.jpg" width="350px"/>
+						<h4>
+							Staff Report
+						</h4>
+						Start Contract Date: {{from_date}} End Contract Date: {{to_date}}
+					</td>
+				</tr>
+			</table>
+			<br>
+			<table class="table-print">
+				<tr>
+					<th>
+						No
+					</th>
+					<th>
+						Staff Name
+					</th>
+					<th>
+						Type
+					</th>
+					<th>
+						Position
+					</th>
+					<th>
+						Sex
+					</th>
+					<th>
+						Basic Salary
+					</th>
+					<th>
+						Telephone
+					</th>
+					<th>
+						Dob
+					</th>
+					<th>
+						Spouse
+					</th>
+					<th>
+						Minor
+					</th>
+					<th>
+						Address
+					</th>
+					<th>
+						Start Work
+					</th>
+					<th>
+						Start Contract
+					</th>
+					<th>
+						End Contract
+					</th>
+				</tr>
+				<tr data-ng-repeat="s in staff.elements">
+					<td>
+						{{$index +1}}
+					</td>
+					<td>
+						{{s.name}}
+					</td>
+					<td>
+						{{s.type}}
+					</td>
+					<td>
+						{{s.position}}
+					</td>
+					<td>
+						{{s.sex}}
+					</td>
+					<td>
+						{{s.basic_salary}}
+					</td>
+					<td>
+						{{s.phone}}
+					</td>
+					<td>
+						{{s.dob}}
+					</td>
+					<td>
+						{{s.spouse}}
+					</td>
+					<td>
+						{{s.minor}}
+					</td>
+					<td>
+						{{s.address}}
+					</td>
+					<td>
+						{{s.start_work}}
+					</td>
+					<td>
+						{{s.start_contract}}
+					</td>
+					<td>
+						{{s.end_contract}}
+					</td>
+				</tr>
+			</table>
+		</div>
+		<div
+			data-ng-if="staff.count == 0"
+		>
+			<div class="alert alert-warning alert-dismissible">
+				<strong>Warning!</strong> No Report.
+			</div>
+		</div>
+		<div
+			data-ng-if="!loading"
+			class="align_center"
+		>
+			<i class="fa fa-refresh fa-spin" style="font-size: 100px;"></i>
+		</div>
+	</div>
+</div>

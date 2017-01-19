@@ -1,0 +1,144 @@
+<form data-ng-submit="save();" name="myForm">
+<div
+	class="modal fade"
+	id="service-popup"
+	data-keyboard="false"
+	data-backdrop="static"
+>
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button
+					type="button"
+					class="close"
+					data-dismiss="modal"
+					data-ng-click="close();"
+				>
+					<span>&times;</span>
+				</button>
+				<h4>
+					<label>Service</label>
+				</h4>
+	      	</div>
+			<div class="modal-body">
+				<div class="tab-content">
+					<table class="table table-bordered">
+						<tr>
+							<td>
+								Name:
+							</td>
+							<td>
+								<input
+									type="text"
+									class="form-control"
+									data-ng-model="service_name"
+									required="required"
+								/>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								Customer Type:
+							</td>
+							<td>
+								<select
+									data-ng-model="customer_type_id"
+									data-ng-options="customer.id as customer.name for customer in customerType.elements"
+									data-ng-init="customer_type_id == customer.id"
+									class="form-control"
+									required
+								>
+									<option value="">--Select--</option>
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								Type:
+							</td>
+							<td>
+								<select
+									class="form-control"
+									required
+									data-ng-options="other for other in ['Commission', 'Normal']"
+									data-ng-init="type == other"
+									data-ng-model="type"
+									>
+									<option value="">--Select--</option>
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								Normal:
+							</td>
+							<td>
+								<input
+									type="text"
+									class="form-control"
+									data-ng-model="normal"
+								/>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								Unit:
+							</td>
+							<td>
+								<input
+									type="text"
+									class="form-control"
+									data-ng-model="unit"
+								/>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								Price:
+							</td>
+							<td>
+								<input
+									type="text"
+									class="form-control"
+									data-ng-model="price"
+									only-numbers
+									required="required"
+								/>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								Detail:
+							</td>
+							<td>
+								<textarea
+									type="text"
+									class="form-control"
+									data-ng-model="detail"
+								></textarea>
+							</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button
+					class="btn btn-default"
+					data-dismiss="modal"
+					data-ng-click="close();"
+				>
+					Close
+				</button>
+				<button
+					class="btn btn-primary"
+					data-ng-disabled="!disable"
+				>
+					Save
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+</form>
+
+

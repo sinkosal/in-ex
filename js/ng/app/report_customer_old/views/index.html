@@ -1,0 +1,192 @@
+<div class="panel panel-default">
+	<div class="panel-heading">
+		Report Customer
+	</div>
+	<div class="panel-body">
+		<table class="table table-bordered">
+			<tr>
+				<td width="150px">
+					Customer Name:
+				</td>
+				<td width="300px">
+					<ui-select
+						ng-model="customer_list.selected"
+						theme="select2"
+						data-ng-disabled="disabled"
+						reset-search-input="false"
+						style="width: 250px;"
+					>
+						<ui-select-match placeholder="Select or Search a Customer in the list...">
+							{{$select.selected.full_name}}
+						</ui-select-match>
+						<ui-select-choices
+							repeat="customer_list in customer track by $index"
+							refresh="refreshCustomerList($select.search)"
+							refresh-delay="0"
+						>
+							<div data-ng-bind-html="customer_list.full_name | highlight: $select.search"></div>
+						</ui-select-choices>
+					</ui-select>
+					<i class="fa fa-refresh" data-ng-click="customer_list = {}"></i>
+				</td>
+				<td width="150px">
+					Customer Type:
+				</td>
+				<td width="300px">
+					<ui-select
+						ng-model="customer_type.selected"
+						theme="select2"
+						data-ng-disabled="disabled"
+						reset-search-input="false"
+						style="width: 250px;"
+					>
+						<ui-select-match placeholder="Select or Search a Customer Type in the list...">
+							{{$select.selected.name}}
+						</ui-select-match>
+						<ui-select-choices
+							repeat="customer_type in customerType track by $index"
+							refresh="refreshCustomerTypeList($select.search)"
+							refresh-delay="0"
+						>
+							<div data-ng-bind-html="customer_type.name | highlight: $select.search"></div>
+						</ui-select-choices>
+					</ui-select>
+					<i class="fa fa-refresh" data-ng-click="customer_type = {}"></i>
+				</td>
+				<td>
+					<button class="btn btn-success margin-top" data-ng-click="init();">
+						<i class="fa fa-hourglass-half"></i>
+						Filter
+					</button>
+					<button class="btn btn-default margin-top" data-ng-click="print();">
+						<i class="fa fa-print"></i>
+						Print
+					</button>
+				</td>
+			</tr>
+		</table>
+		<div data-ng-if="customers.count" id="print">
+			<table width="100%">
+				<tr>
+					<td align="center">
+						<img src="images/IMI.jpg" width="350px"/>
+						<h4>
+							Customer Report
+						</h4>
+						Total Record: {{totalItems}}
+					</td>
+				</tr>
+			</table>
+			<table class="table-print">
+				<tr>
+					<th>
+						No
+					</th>
+					<th>
+						Name
+					</th>
+					<th>
+						Customer Type
+					</th>
+					<th>
+						Sex
+					</th>
+					<th>
+						Doctor Name
+					</th>
+					<th>
+						Barcode
+					</th>
+					<th>
+						Country
+					</th>
+					<th>
+						Phone
+					</th>
+					<th>
+						Email
+					</th>
+					<th>
+						Address
+					</th>
+					<th>
+						Family Phone
+					</th>
+					<th>
+						Relative Phone
+					</th>
+					<th>
+						Detail
+					</th>
+				</tr>
+				<tr data-ng-repeat="c in customers.elements track by c.id">
+					<td>
+						{{$index +1}}
+					</td>
+					<td>
+						{{c.full_name}}
+					</td>
+					<td>
+						{{c.customer_type[0].name}}
+					</td>
+					<td>
+						{{c.sex}}
+					</td>
+					<td>
+						{{c.doctor_fields[0].name}}
+					</td>
+					<td>
+						{{c.barcode}}
+					</td>
+					<td>
+						{{c.country}}
+					</td>
+					<td>
+						{{c.tel}}
+					</td>
+					<td>
+						{{c.email}}
+					</td>
+					<td>
+						{{c.address}}
+					</td>
+					<td>
+						{{c.relative_contact}}
+					</td>
+					<td>
+						{{c.relative_tel}}
+					</td>
+					<td>
+						{{c.detail}}
+					</td>
+				</tr>
+			</table>
+		</div>
+		<div
+			class="panel-footer"
+			data-ng-show="totalItems > 100"
+		>
+			<pagination
+				total-items="totalItems"
+				ng-model="currentPage"
+				ng-change="pageChanged()"
+				max-size="10"
+				items-per-page="100"
+				boundary-links="true"
+			></pagination>
+		</div>
+		<div
+			data-ng-if="customers.count == 0"
+		>
+			<div class="alert alert-warning alert-dismissible">
+				<strong>Warning!</strong> No Report.
+			</div>
+		</div>
+		<div
+			data-ng-if="!loading"
+			class="align_center"
+		>
+			<i class="fa fa-refresh fa-spin" style="font-size: 100px;"></i>
+		</div>
+	</div>
+</div>

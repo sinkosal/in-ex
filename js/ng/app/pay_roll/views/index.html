@@ -1,0 +1,264 @@
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <b>Pay Roll</b>
+    </div>
+    <div class="panel-body">
+        <button
+            class="btn btn-success"
+            data-ng-click="save();"
+        >
+            <i class="fa fa-save"></i>
+            Save
+        </button>
+        <br/>
+        <table class="table table-bordered">
+            <tr>
+                <td width="90px">
+                    Staff Name
+                </td>
+                <td>
+                    <ui-select
+                        ng-model="staff_list.selected"
+                        theme="select2"
+                        data-ng-disabled="disabled"
+                        reset-search-input="false"
+                        style="width: 300px;"
+                    >
+                        <ui-select-match placeholder="Select or Search a Staff in the list...">
+                            {{$select.selected.name}}
+                        </ui-select-match>
+                        <ui-select-choices
+                                repeat="staff_list in staffs track by $index"
+                                refresh="refreshStaffList($select.search)"
+                                refresh-delay="2"
+                                >
+                            <div data-ng-bind-html="staff_list.name | highlight: $select.search"></div>
+                        </ui-select-choices>
+                    </ui-select>
+                </td>
+                <td>
+                    Position
+                </td>
+                <td>
+                    <input type="text" class="form-control" readonly data-ng-model="staff_list.selected.position"/>
+                </td>
+                <td>
+                    Type
+                </td>
+                <td>
+                    <input type="text" class="form-control" readonly data-ng-model="staff_list.selected.type"/>
+                </td>
+                <td>
+                    Spouse
+                </td>
+                <td>
+                    <input type="text" class="form-control" readonly data-ng-model="staff_list.selected.spouse"/>
+                </td>
+                <td>
+                    Minor
+                </td>
+                <td>
+                    <input type="text" class="form-control" readonly data-ng-model="staff_list.selected.minor"/>
+                </td>
+            </tr>
+        </table>
+        <table class="table table-bordered table-striped">
+            <tr>
+                <td>
+                    Basic Salary:
+                </td>
+                <td>
+                    <input
+                        type="text"
+                        class="form-control"
+                        readonly
+                        data-ng-model="staff_list.selected.basic_salary"
+                    />
+                </td>
+                <td>
+                    Regular Rate:
+                </td>
+                <td>
+                    <input
+                        type="text"
+                        class="form-control"
+                        only-numbers
+                        data-ng-model="regular_rate"
+                        data-ng-change="totalRegularAmount()"
+                    />
+                </td>
+                <td>
+                    =
+                </td>
+                <td>
+                    <input
+                        type="text"
+                        class="form-control"
+                        data-ng-model="total_regular_amount"
+                        readonly
+                    />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Over Time(OT):
+                </td>
+                <td>
+                    <input type="text" class="form-control" only-numbers data-ng-model="ot" data-ng-change="totalOtAmount()"/>
+                </td>
+                <td>
+                    OT Rate:
+                </td>
+                <td>
+                    <input type="text" class="form-control" only-numbers data-ng-model="ot_rate" data-ng-change="totalOtAmount()"/>
+                </td>
+                <td>
+                    =
+                </td>
+                <td>
+                    <input
+                        type="text"
+                        class="form-control"
+                        data-ng-model="total_ot_amount"
+                        readonly
+                    />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Service Perform:
+                </td>
+                <td>
+                    <input type="text" class="form-control" data-ng-change="totalServicePerform()" only-numbers data-ng-model="service_perform"/>
+                </td>
+                <td>
+                    Benefit Rate:
+                </td>
+                <td>
+                    <input type="text" class="form-control" data-ng-change="totalServicePerform()" only-numbers data-ng-model="benefit"/>
+                </td>
+                <td>
+                    =
+                </td>
+                <td>
+                    <input
+                        type="text"
+                        class="form-control"
+                        data-ng-model="total_service_perform"
+                        readonly
+                    />
+                </td>
+            </tr>
+            <tr>
+                <td rowspan="9">
+                    Note:
+                </td>
+                <td colspan="2" rowspan="9">
+                    <textarea
+                        class="form-control"
+                        style="height: 100%;"
+                        data-ng-model="note"
+                    >
+                    </textarea>
+                </td>
+                <td>
+                    Other Compensation:
+                </td>
+                <td>
+                    =
+                </td>
+                <td>
+                    <input
+                        type="text"
+                        class="form-control"
+                        data-ng-model="total_other_compensation"
+                        only-numbers
+                        data-ng-change="grossSalary();"
+                    />
+                </td>
+            </tr>
+            <tr>
+                <td>Spouse/Minor</td>
+                <td>=</td>
+                <td>
+                    <input
+                        type="text"
+                        class="form-control"
+                        data-ng-model="spouse_minor"
+                        readonly
+                        data-ng-value="{{spouse_minor = (staff_list.selected.minor + staff_list.selected.spouse) * 75000 / 4000}}"
+                    />
+                </td>
+            </tr>
+            <tr>
+                <td>Gross Salary</td>
+                <td>=</td>
+                <td>
+                    <input
+                        type="text"
+                        class="form-control"
+                        data-ng-model="gross_salary"
+                        readonly
+                    />
+                </td>
+            </tr>
+            <tr>
+                <td>Taxable Salary</td>
+                <td>=</td>
+                <td>
+                    <input
+                        type="text"
+                        class="form-control"
+                        data-ng-model="taxable_salary"
+                        readonly
+                    />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Tax:
+                    <input
+                        style="
+                            width: 100px;
+                            float: right;
+                        "
+                        type="text"
+                        class="form-control"
+                        readonly
+                        data-ng-model="tax"
+                    />%
+                </td>
+                <td>=</td>
+                <td><input type="text" class="form-control" data-ng-model="total_tax_amount" readonly/></td>
+            </tr>
+            <tr>
+                <td>Net Salary:</td>
+                <td>=</td>
+                <td><input type="text" class="form-control" data-ng-model="net_salary" readonly/></td>
+            </tr>
+            <tr>
+                <td>Total Salary:</td>
+                <td>=</td>
+                <td><input type="text" class="form-control" data-ng-model="total_salary" readonly/></td>
+            </tr>
+            <tr>
+                <td>Staff Advance:</td>
+                <td>=</td>
+                <td>
+                    <input
+                        type="text"
+                        class="form-control"
+                        data-ng-model="staff_advance"
+                        data-ng-change="grossSalary();"
+                        only-numbers
+                    />
+                </td>
+            </tr>
+            <tr>
+                <td>Final Salary:</td>
+                <td>=</td>
+                <td><input type="text" class="form-control" data-ng-model="final_salary" readonly/></td>
+            </tr>
+        </table>
+    </div>
+</div>

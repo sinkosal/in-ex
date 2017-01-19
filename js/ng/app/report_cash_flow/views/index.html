@@ -1,0 +1,344 @@
+<div class="panel panel-default">
+	<div class="panel-heading">
+		Cash Flow Report
+	</div>
+	<div class="panel-body">
+		<table class="table table-bordered">
+			<tr>
+				<td width="100px">
+					From Date:
+				</td>
+				<td>
+					<div cambodia-date-picker date-format="y-MM-dd" class="input-group">
+						<input type="text" class="form-control" data-ng-model="from_date"/>
+						<span class="input-group-btn">
+				        	<button class="btn btn-default" type="button">
+				        		<i class="fa fa-calendar"></i>
+				        	</button>
+						</span>
+				    </div>
+				</td>
+				<td width="100px">
+					To Date:
+				</td>
+				<td>
+					<div cambodia-date-picker date-format="y-MM-dd" class="input-group">
+						<input type="text" class="form-control" data-ng-model="to_date"/>
+						<span class="input-group-btn">
+				        	<button class="btn btn-default" type="button">
+				        		<i class="fa fa-calendar"></i>
+				        	</button>
+						</span>
+				    </div>
+				</td>
+				<td>
+					<ui-select
+						ng-model="doctor_list.selected"
+						theme="select2"
+						data-ng-disabled="disabled"
+						reset-search-input="false"
+						data-ng-change="selectService(service_list.selected);"
+						style="width: 250px;"
+					>
+						<ui-select-match placeholder="Enter An Doctor Name...">
+							{{$select.selected.name}}
+						</ui-select-match>
+						<ui-select-choices
+							repeat="doctor_list in doctorList track by $index"
+							refresh="refreshDoctorList($select.search)"
+							refresh-delay="0"
+						>
+							<div data-ng-bind-html="doctor_list.name | highlight: $select.search"></div>
+						</ui-select-choices>
+					</ui-select>
+					<i class="fa fa-refresh" data-ng-click="doctor_list = {}"></i>
+				</td>
+				<td>
+					<input type="text" data-ng-model="tax" class="form-control" placeholder="input tax..."/>
+				</td>
+				<td>
+					<button class="btn btn-success margin-top" data-ng-click="init();">
+						<i class="fa fa-hourglass-half"></i>
+						Filter
+					</button>
+					<button class="btn btn-default margin-top" data-ng-click="print();">
+						<i class="fa fa-print"></i>
+						Print
+					</button>
+				</td>
+			</tr>
+		</table>
+		<div data-ng-if="caseFlow" id="print">
+			<table width="100%">
+				<tr>
+					<td align="center">
+						<img src="images/IMI.jpg" width="350px"/>
+						<h4>
+							Daily Cash Flow Report
+						</h4>
+						<div data-ng-show="doctor_list.selected">
+							By Dr. {{doctor_list.selected.name}}
+						</div>
+						From: {{from_date}} To: {{to_date}}
+					</td>
+				</tr>
+			</table>
+			<br/>
+			<table class="table-print">
+				<tr>
+					<th>
+						No
+					</th>
+					<th width="120px">
+						Invoice No
+					</th>
+					<th width="120px">
+						Invoice Date
+					</th>
+					<th width="120px">
+						Patient Name
+					</th>
+					<th width="120px">
+						Doctor Name
+					</th>
+					<th>
+						Treatment
+					</th>
+					<th width="140px">
+						Cash In Payment
+					</th>
+					<th width="140px">
+						Bank Payment
+					</th>
+					<th width="140px">
+						Bank Charge
+					</th>
+					<th width="140px">
+						Bank Charge Total
+					</th>
+				</tr>
+				<tr data-ng-repeat="i in caseFlow.elements">
+					<td>
+						{{$index +1}}
+					</td>
+					<td>
+						<span data-ng-bind="i.invoice_no"></span>
+					</td>
+					<td>
+						<span data-ng-bind="i.invoice_date"></span>
+					</td>
+					<td>
+						<span data-ng-bind="i.customer_name"></span>
+					</td>
+					<td>
+						<span data-ng-bind="i.doctor_name"></span>
+					</td>
+					<td>
+						<span data-ng-bind="i.treatment"></span>
+					</td>
+					<td>
+						<span data-ng-bind="i.cash_in | currency"></span>
+					</td>
+					<td>
+						<span
+							data-ng-bind="i.bank | currency"
+						></span>
+					</td>
+					<td>
+						%<span data-ng-bind="i.bank_charge"></span>
+					</td>
+					<td>
+						<span data-ng-bind="( i.bank_charge * (i.bank + i.cash_in) ) / 100 | currency"></span>
+					</td>
+				</tr>
+				<tr style="background: #26a69a;">
+					<td colspan="6" align="right">
+						<b>Total:</b>
+					</td>
+					<td>
+						<b>{{total_cash_amount | currency}}</b>
+					</td>
+					<td>
+						<b>{{total_bank_amount | currency}}</b>
+					</td>
+					<td></td>
+					<td>
+						<b>{{total_bank_charge_amount | currency}}</b>
+					</td>
+				</tr>
+				<tr style="background: #F4BF1E;">
+					<td colspan="6" align="right">
+						<b>Total Income:</b>
+					</td>
+					<td colspan="4">
+						<b>{{total_income_amount | currency}}</b>
+					</td>
+				</tr>
+			</table>
+			<div
+				data-ng-if="caseFlow.count == 0"
+			>
+				<div class="alert alert-warning alert-dismissible">
+					<strong>Warning!</strong> No Report.
+				</div>
+			</div>
+			<br/><br/>
+			<table width="100%">
+				<tr>
+					<td align="center">
+						<h4>
+							Doctor Expense Report
+						</h4>
+					</td>
+				</tr>
+			</table>
+			<br/>
+			<table class="table-print">
+				<tr>
+					<th>
+						No
+					</th>
+					<th>
+						Invoice No
+					</th>
+					<th>
+						Invoice Date
+					</th>
+					<th>
+						Patient Name
+					</th>
+					<th>
+						Doctor Name
+					</th>
+					<th>
+						Labo
+					</th>
+					<th>
+						Description
+					</th>
+					<th>
+						Qty
+					</th>
+					<th>
+						Price
+					</th>
+					<th>
+						Amount
+					</th>
+				</tr>
+				<tr data-ng-repeat="i in expense.elements">
+					<td>
+						{{$index +1}}
+					</td>
+					<td>
+						<span data-ng-bind="i.invoice_no"></span>
+					</td>
+					<td>
+						<span data-ng-bind="i.expense_date"></span>
+					</td>
+					<td>
+						<span data-ng-bind="i.customer_detail[0].full_name"></span>
+					</td>
+					<td>
+						<span data-ng-bind="i.doctor_detail[0].name"></span>
+					</td>
+					<td>
+						{{i.labo}}
+					</td>
+					<td>
+						{{i.description}}
+					</td>
+					<td>
+						<span data-ng-bind="i.qty"></span>
+					</td>
+					<td>
+						<span data-ng-bind="i.price | currency"></span>
+					</td>
+					<td>
+						<span data-ng-bind="i.amount | currency"></span>
+					</td>
+				</tr>
+				<tr style="background: #26a69a;">
+					<td colspan="9" align="right">
+						<b>Total:</b>
+					</td>
+					<td>
+						<b>{{total_amount | currency}}</b>
+					</td>
+				</tr>
+				<tr style="background: #F4BF1E;">
+					<td colspan="8" align="right">
+						<b>Net Income:</b>
+					</td>
+					<td>100%</td>
+					<td colspan="3">
+						<b>{{total_net_income_amount = total_income_amount - total_amount | currency}}</b>
+					</td>
+				</tr>
+				<tr style="background: #F4BF1E;">
+					<td colspan="8" align="right">
+						<b>Commission:</b>
+					</td>
+					<td>40%</td>
+					<td colspan="3">
+						<b>{{total_net_income_amount = total_net_income_amount * 0.40 | currency}}</b>
+					</td>
+				</tr>
+				<tr style="background: #F4BF1E;">
+					<td colspan="8" align="right">
+						<b>Wage Before Tax:</b>
+					</td>
+					<td>40%</td>
+					<td colspan="3">
+						<b>{{total_net_income_amount | currency}}</b>
+					</td>
+				</tr>
+				<tr style="background: #F4BF1E;">
+					<td colspan="8" align="right">
+						<b>Tax:</b>
+					</td>
+					<td></td>
+					<td colspan="3">
+						<b>{{ tax | currency}}</b>
+					</td>
+				</tr>
+				<tr style="background: #F4BF1E;">
+					<td colspan="8" align="right">
+						<b>Wage After Tax:</b>
+					</td>
+					<td>40%</td>
+					<td colspan="3">
+						<b>{{total_net_income_amount - tax| currency}}</b>
+					</td>
+				</tr>
+				<tr style="background: #F4BF1E;">
+					<td colspan="8" align="right">
+						<b>Friege Benifit</b>
+					</td>
+					<td></td>
+					<td colspan="3">
+						<b>-</b>
+					</td>
+				</tr>
+
+				<tr style="background: #F4BF1E;">
+					<td colspan="8" align="right">
+						<b>Wage Grand Total</b>
+					</td>
+					<td></td>
+					<td colspan="3">
+						<b>{{total_net_income_amount - tax | currency}}</b>
+					</td>
+				</tr>
+
+			</table>
+		</div>
+
+		<div
+			data-ng-if="!loading"
+			class="align_center"
+		>
+			<i class="fa fa-refresh fa-spin" style="font-size: 100px;"></i>
+		</div>
+	</div>
+</div>

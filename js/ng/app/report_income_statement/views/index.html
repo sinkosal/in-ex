@@ -1,0 +1,129 @@
+<div class="panel panel-default">
+	<div class="panel-heading">
+		Income Statement Report
+	</div>
+	<div class="panel-body">
+		<table class="table table-bordered">
+			<tr>
+				<td width="100px">
+					From Date:
+				</td>
+				<td>
+					<div cambodia-date-picker date-format="y-MM-dd" class="input-group">
+						<input type="text" class="form-control" data-ng-model="from_date"/>
+						<span class="input-group-btn">
+				        	<button class="btn btn-default" type="button">
+				        		<i class="fa fa-calendar"></i>
+				        	</button>
+						</span>
+				    </div>
+				</td>
+				<td width="100px">
+					To Date:
+				</td>
+				<td>
+					<div cambodia-date-picker date-format="y-MM-dd" class="input-group">
+						<input type="text" class="form-control" data-ng-model="to_date"/>
+						<span class="input-group-btn">
+				        	<button class="btn btn-default" type="button">
+				        		<i class="fa fa-calendar"></i>
+				        	</button>
+						</span>
+				    </div>
+				</td>
+				<td>
+					<button class="btn btn-success margin-top" data-ng-click="init();">
+						<i class="fa fa-hourglass-half"></i>
+						Filter
+					</button>
+					<button class="btn btn-default margin-top" data-ng-click="print();">
+						<i class="fa fa-print"></i>
+						Print
+					</button>
+				</td>
+			</tr>
+		</table>
+		<div data-ng-if="invoice" id="print">
+			<table width="100%">
+				<tr>
+					<td align="center">
+						<img src="images/IMI.jpg" width="350px"/>
+						<h4>
+							Income Statement Report
+						</h4>
+						From: {{from_date}} To: {{to_date}}
+					</td>
+				</tr>
+			</table>
+			<br/><br/>
+			<table class="table-print">
+				<table width="100%">
+					<tr>
+						<td>
+							<ul data-ng-repeat="b in invoice.master">
+								<table width="100%">
+									<tr>
+										<td style="width: 93%;">
+											<li style="list-style:none;">
+												<b>{{b.name}}</b>
+											</li>
+											<ul data-ng-repeat="d in invoice.master_detail" ng-if="d.account_type_id == b.id">
+												<table width="100%">
+													<tr>
+														<td>
+															<li style="list-style:none;">
+																{{d.name}}
+																..........................................................
+															</li>
+														</td>
+														<td align="right" valign="top">
+															<span data-ng-repeat="tmd in invoice.total_master_detail" data-ng-if="tmd.account_chart_id == d.id">
+																<b>{{tmd.total | currency}}</b>
+															</span>
+														</td>
+													</tr>
+												</table>
+											</ul>
+										</td>
+										<td valign="top" style="float: right;">
+											<span data-ng-repeat="tm in invoice.total_master" data-ng-if="tm.account_type_id == b.id">
+												<b style="text-decoration: underline;">{{tm.total | currency}}</b>
+											</span>
+										</td>
+									</tr>
+								</table>
+							</ul>
+							<ul>
+								<table width="100%">
+									<tr>
+										<td width="86%">
+											<li style="list-style:none;">
+												<b>Net Income</b>
+											</li>
+										</td>
+										<td style="float: right;">
+											<b style="text-decoration: underline;">{{netIncome | currency}}</b>
+										</td>
+									</tr>
+								</table>
+							</ul>
+						</td>
+					</tr>
+				</table>
+			</table>
+		</div>
+		<div
+			data-ng-if="invoice.count == 0"
+		>
+			<div class="alert alert-warning alert-dismissible">
+				<strong>Warning!</strong> No Report.
+			</div>
+		</div>
+		<div
+			data-ng-if="!loading"
+			class="align_center"
+		>
+			<i class="fa fa-refresh fa-spin" style="font-size: 100px;"></i>
+		</div>
+	</div>
+</div>

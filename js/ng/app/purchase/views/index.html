@@ -1,0 +1,358 @@
+<!-- List Of Purchase -->
+<div class="panel panel-default" data-ng-show="!addNew">
+	<div class="panel-heading">
+		<b>Purchase List</b>
+	</div>
+	<div class="panel-body">
+		<button class="btn btn-default" data-ng-click="addNew = 'true'">
+			<i class="fa fa-plus"></i>
+			Add New
+		</button>
+		<table class="table table-bordered">
+			<tr>
+				<td>
+					<input type="text" class="form-control" data-ng-model="reference_no" placeholder="Search By Purchase No ..."/>
+				</td>
+				<td>
+					<select
+						data-ng-model="vendor"
+						data-ng-options="vendor.name as vendor.name for vendor in vendorList.elements"
+						class="form-control"
+						data-ng-change="search();"
+					>
+						<option value="">--Filter By Vendor--</option>
+					</select>
+				</td>
+				<td>
+					<button class="btn btn-primary" data-ng-click="search();">Search</button>
+				</td>
+			</tr>
+		</table>
+		<table class="table table-bordered">
+			<tr>
+				<th>
+					Id
+				</th>
+				<th>Purchase No</th>
+				<th>Purchase Date</th>
+				<th>Vendor Name</th>
+				<th>Total Amount</th>
+				<th>Remain</th>
+				<th>Action</th>
+			</tr>
+			<tr data-ng-repeat="p in purchaseList.elements">
+				<td>{{p.id}}</td>
+				<td>{{p.reff_no}}</td>
+				<td>{{p.purchase_date}}</td>
+				<td>{{p.supplier_name}}</td>
+				<td>{{p.total | currency}}</td>
+				<td>{{p.remain | currency}}</td>
+				<td>
+					<button
+						class="btn btn-success"
+						data-ng-click="updateStatus(p);"
+						data-ng-if="p.status == 1"
+					>
+						<span class="fa fa-check-square-o"></span>
+					</button>
+					<button
+						class="btn btn-warning"
+						data-ng-if="p.status == 0"
+						data-ng-click="updateStatus(p);"
+					>
+						<span class="fa fa-close"></span>
+					</button>
+				</td>
+			</tr>
+		</table>
+		<div
+			data-ng-if="purchaseList.count == 0"
+		>
+			<div class="alert alert-warning alert-dismissible">
+				<strong>Warning!</strong> No Data Entry.
+			</div>
+		</div>
+		<div
+				data-ng-if="!purchaseList"
+				class="align_center"
+		>
+			<i class="fa fa-refresh fa-spin" style="font-size: 100px;"></i>
+		</div>
+		<div
+			class="panel-footer"
+		>
+			<pagination
+				total-items="totalItems"
+				ng-model="currentPage"
+				ng-change="pageChanged()"
+				max-size="10"
+				items-per-page="10"
+				boundary-links="true"
+			></pagination>
+		</div>
+	</div>
+</div>
+
+<!-- End of List -->
+<!-- Add New Purchase -->
+<div class="panel panel-default" data-ng-show="addNew">
+	<div class="panel-heading">
+		Purchase
+	</div>
+	<div class="panel-body">
+		<button class="btn btn-default" data-ng-click="back();">
+			<i class="fa fa-reply"></i>
+			Back
+		</button>
+		<button class="btn btn-success" data-ng-disabled="disabled" data-ng-click="save();">
+			<i class="glyphicon glyphicon-floppy-saved"></i>
+			Save
+		</button>
+		<h4>Vendor</h4>
+		<hr>
+		<input type="hidden" id="sel">
+		<table class="table table-bordered">
+			<tr>
+				<td>
+					Vendor:
+				</td>
+				<td width="300px">
+					<ui-select
+						ng-model="vendor_list.selected"
+						theme="select2"
+						data-ng-disabled="disabled"
+						reset-search-input="false"
+						style="width: 300px;"
+					>
+						<ui-select-match placeholder="Select or Search a Vendor in the list...">
+							{{$select.selected.name}}
+						</ui-select-match>
+						<ui-select-choices
+								repeat="vendor_list in vendors track by $index"
+								refresh="refreshVendorList($select.search)"
+								refresh-delay="0"
+								>
+							<div data-ng-bind-html="vendor_list.name | highlight: $select.search"></div>
+						</ui-select-choices>
+					</ui-select>
+				</td>
+				<td>
+					Type:
+				</td>
+				<td>
+					<input
+						type="text"
+						readonly
+						class="form-control"
+						data-ng-model="vendor_list.selected.vendor_type[0].name"
+					/>
+				</td>
+				<td>
+					Date:
+				</td>
+				<td>
+					<div cambodia-date-picker date-format="y-MM-dd" class="input-group">
+						<input type="text" class="form-control" data-ng-model="date"/>
+						<span class="input-group-btn">
+				        	<button class="btn btn-default" type="button">
+				        		<i class="fa fa-calendar"></i>
+				        	</button>
+						</span>
+				    </div>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					Purchase No:
+				</td>
+				<td>
+					<input type="text" class="form-control" data-ng-model="reff_no" placeholder="Purchase No ..."/>
+				</td>
+				<td>
+					Note:
+				</td>
+				<td width="300px" colspan="4">
+					<textarea
+						data-ng-model="note"
+						class="form-control"
+						rows="4"
+					>
+					</textarea>
+				</td>
+			</tr>
+		</table>
+		<h4>Product:</h4>
+		<table class="table">
+			<tr>
+				<td>
+					<ui-select
+						ng-model="product_filter.selected"
+						theme="select2"
+						data-ng-disabled="disabled"
+						reset-search-input="false"
+						style="width: 300px;"
+					>
+						<ui-select-match placeholder="Select or Search a Approved By in the list...">
+							{{$select.selected.products_name}}
+						</ui-select-match>
+						<ui-select-choices
+							repeat="product_filter in products track by $index"
+							refresh="refreshProductsList($select.search)"
+							refresh-delay="0"
+						>
+							<div data-ng-bind-html="product_filter.products_name | highlight: $select.search"></div>
+						</ui-select-choices>
+					</ui-select>
+				</td>
+				<td>
+					<button
+						class="btn btn-primary"
+						data-toggle="modal"
+						data-target="#purchase-pop-up"
+					>
+						<i class="glyphicon glyphicon-plus"></i>
+					</button>
+				</td>
+				<td>
+					<input
+						type="text"
+					 	placeholder="barcode"
+						data-ng-model="product_filter.selected.barcode"
+						class="form-control"
+					/>
+				</td>
+				<td>
+					<input
+						type="text"
+						placeholder="Qty"
+						only-numbers
+						data-ng-change="calculate();"
+						data-ng-model="qty"
+						class="form-control"
+					/>
+				</td>
+				<td>
+					<input
+						type="text"
+						placeholder="Price"
+						only-numbers
+						data-ng-change="calculate();"
+						data-ng-model="product_filter.selected.products_price_in"
+						class="form-control"
+					/>
+				</td>
+				<td>
+					<input type="text" placeholder="Total" data-ng-model="total" disabled id="total" class="form-control"/>
+				</td>
+				<td>
+					<button
+						class="btn btn-primary"
+						data-ng-click="add();"
+					>
+						<i class="glyphicon glyphicon-plus"></i>
+						Add
+					</button>
+				</td>
+			</tr>
+		</table>
+		<div class="scroll">
+			<table class="table table-bordered table-striped">
+				<tr>
+					<th>
+						No
+					</th>
+					<th>
+						Product Name
+					</th>
+					<th>
+						Barcode
+					</th>
+					<th>
+						Qty
+					</th>
+					<th>
+						Price
+					</th>
+					<th>
+						Total
+					</th>
+					<th width="160px">
+						Action
+					</th>
+				</tr>
+				<tr data-ng-repeat="list in listData">
+					<td>
+						{{$index + 1}}
+					</td>
+					<td>
+						{{list.product_name}}
+					</td>
+					<td>
+						{{list.barcode}}
+					</td>
+					<td>
+						<input
+							type="text"
+						   	data-ng-model="list.qty"
+							only-numbers
+							class="form-control"
+							data-ng-change="getTotal();"
+						/>
+					</td>
+					<td>
+						<input
+							type="text"
+							data-ng-model="list.unit_price"
+							only-numbers
+							class="form-control"
+							data-ng-change="getTotal();"
+						/>
+					</td>
+					<td>
+						{{list.unit_price * list.qty | currency}}
+						<!--{{list.total}}-->
+					</td>
+					<td>
+						<button class="btn btn-danger" data-ng-click="remove($index);">Remove</button>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<table class="table table-bordered">
+			<tr valign="right">
+				<td width="80%" align="right">
+					Grand Total:
+				</td>
+				<td>
+					<span data-ng-bind="sub_total | currency"></span>
+				</td>
+			</tr>
+			<tr>
+				<td width="80%" align="right">
+					Payment:
+				</td>
+				<td>
+					<input class="form-control" data-ng-change="input();" only-numbers data-ng-model="input_money">
+				</td>
+			</tr>
+			<tr>
+				<td width="80%" align="right">
+					Remaining:
+				</td>
+				<td>
+					<span data-ng-bind="remaining | currency"></span>
+				</td>
+			</tr>
+		</table>
+	</div>
+</div>
+<purchase-pop-up></purchase-pop-up>
+<style>
+.scroll{
+	height:300px;
+	width:100%;
+	overflow:hidden;
+	overflow-y:scroll;
+}
+</style>
+<!-- End add new -->

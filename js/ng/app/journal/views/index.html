@@ -1,0 +1,361 @@
+<!-- list of journal when open form-->
+
+
+<div class="panel panel-default" data-ng-show="!addNew">
+    <div class="panel-heading">
+        <b>Journal List</b>
+    </div>
+    <div class="panel-body">
+        <button class="btn btn-default" data-ng-click="addNew = 'true'">
+            <i class="fa fa-plus"></i>
+            Add New
+        </button>
+        <table class="table table-bordered">
+            <tr>
+                <th>Id</th>
+                <th>Transaction No</th>
+                <th>Date</th>
+                <th>Amount</th>
+                <th>Remarks</th>
+                <th>Action</th>
+            </tr>
+            <tr data-ng-repeat="j in journal.elements">
+                <td>{{j.id}}</td>
+                <td>{{j.trans_no}}</td>
+                <td>{{j.trans_date}}</td>
+                <td>{{j.amount | currency}}</td>
+                <td>{{j.remarks}}</td>
+                <td>
+                    <button
+                        class="btn btn-success"
+                        data-ng-click="updateStatus(j);"
+                        data-ng-if="j.status == 1"
+                    >
+                        <span class="fa fa-check-square-o"></span>
+                    </button>
+                    <button
+                        class="btn btn-warning"
+                        data-ng-if="j.status == 0"
+                        data-ng-click="updateStatus(j);"
+                    >
+                        <span class="fa fa-minus-square-o"></span>
+                    </button>
+                </td>
+            </tr>
+        </table>
+        <div
+            data-ng-if="journal.elements == 0"
+        >
+            <div class="alert alert-warning alert-dismissible">
+                <strong>Warning!</strong> No Data Entry.
+            </div>
+        </div>
+        <div
+                data-ng-if="!journal"
+                class="align_center"
+        >
+            <i class="fa fa-refresh fa-spin" style="font-size: 100px;"></i>
+        </div>
+        <div
+            class="panel-footer"
+            data-ng-show="totalItems > 10"
+        >
+        <pagination
+            total-items="totalItems"
+            ng-model="currentPage"
+            ng-change="pageChanged()"
+            max-size="5"
+            items-per-page="10"
+            boundary-links="true"
+        ></pagination>
+        </div>
+    </div>
+</div>
+
+<!-- add form when open -->
+<style>
+    .scroll{
+        height: 300px;
+        width: 100%;
+        overflow: hidden;
+        border: 1px solid #ddd;
+        overflow-y: scroll;
+    }
+</style>
+<div class="panel panel-default" data-ng-show="addNew">
+    <div class="panel-heading">
+        <b>Setup Journal</b>
+    </div>
+    <div class="panel-body">
+        <button class="btn btn-default" data-ng-click="addNew = false">
+            <i class="fa fa-reply"></i>
+            Back
+        </button>
+        <button
+            class="btn btn-success"
+            data-ng-click="save();"
+            data-ng-disabled="disable"
+        >
+            <span class="fa fa-save"></span>
+            Save
+        </button>
+        <table class="table table-bordered">
+            <tr>
+                <td>
+                    No:
+                </td>
+                <td>
+                    <input type="text" class="form-control" data-ng-model="trans_no" readonly/>
+                </td>
+                <td>
+                    Trans Date:
+                </td>
+                <td>
+                    <div cambodia-date-picker date-format="y-MM-dd" class="input-group">
+                        <input type="text" class="form-control" data-ng-change="generateTransNo();" data-ng-model="trans_date"/>
+                        <span class="input-group-btn">
+                            <button class="btn btn-default" type="button">
+                                <i class="fa fa-calendar"></i>
+                            </button>
+                        </span>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Remark:
+                </td>
+                <td colspan="3">
+                    <textarea
+                        class="form-control"
+                        data-ng-model="remarks"
+                    ></textarea>
+                </td>
+            </tr>
+        </table>
+        <table class="table table-bordered">
+            <tr>
+                <td width="150px">
+                    Reference No:
+                </td>
+                <td>
+                    <input type="text" class="form-control" data-ng-model="reference_no"/>
+                </td>
+                <td>
+                    Account Code:
+                </td>
+                <td>
+                    <ui-select
+                        ng-model="account_list.selected"
+                        theme="select2"
+                        data-ng-disabled="disabled"
+                        reset-search-input="false"
+                        style="width: 100%;"
+                    >
+                        <ui-select-match placeholder="Enter An Account Name...">
+                            {{$select.selected.account_code}}
+                        </ui-select-match>
+                        <ui-select-choices
+                                repeat="account_list in accountList track by $index"
+                                refresh="refreshAccountList($select.search)"
+                                refresh-delay="0"
+                        >
+                            <span data-ng-bind-html="account_list.account_code | highlight: $select.search"></span>,
+                            <span data-ng-bind-html="account_list.name | highlight: $select.search"></span>,
+                            <span data-ng-bind-html="account_list.detail[0].name | highlight: $select.search"></span>
+                        </ui-select-choices>
+                    </ui-select>
+                </td>
+                <td rowspan="6">
+                    <button class="btn btn-primary" data-ng-click="add();" style="width: 100%;">
+                        <span class="fa fa-plus-circle"></span>
+                        Add
+                    </button>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Account Name:
+                </td>
+                <td>
+                    <input type="text" class="form-control" readonly data-ng-model="account_list.selected.name"/>
+                </td>
+                <td>
+                    Description:
+                </td>
+                <td>
+                    <textarea
+                        class="form-control"
+                        data-ng-model="description"
+                    ></textarea>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Debit:
+                </td>
+                <td>
+                    <input type="text" class="form-control" data-ng-model="debit" only-numbers/>
+                </td>
+                <td>
+                    Credit:
+                </td>
+                <td>
+                    <input type="text" class="form-control" data-ng-model="credit" only-numbers/>
+                </td>
+            </tr>
+            <tr>
+                <td rowspan="3">
+                    Supplier:
+                </td>
+                <td>
+                    <ui-select
+                        ng-model="supplier_list.selected"
+                        theme="select2"
+                        data-ng-disabled="disabled"
+                        data-ng-change="getBalanceVendor(supplier_list.selected);"
+                        reset-search-input="false"
+                        style="width: 100%;"
+                    >
+                        <ui-select-match placeholder="Enter An Supplier Name...">
+                            {{$select.selected.name}}
+                        </ui-select-match>
+                        <ui-select-choices
+                            repeat="supplier_list in supplierList track by $index"
+                            refresh="refreshSupplierList($select.search)"
+                            refresh-delay="2"
+                        >
+                            <div data-ng-bind-html="supplier_list.name | highlight: $select.search"></div>
+                        </ui-select-choices>
+                    </ui-select>
+                </td>
+                <td>
+                    Payee Invoice
+                </td>
+                <td>
+                    <input type="text" data-ng-model="payee_invoice" class="form-control"/>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3">
+                    Out Standing Balance:
+                    <b>{{vendor_balance | currency}}</b>
+                </td>
+            </tr>
+        </table>
+        <h4>Journal Description:</h4>
+        <div class="scroll">
+            <table class="table table-bordered table-striped">
+                <thead>
+                <th>
+                    No
+                </th>
+                <th>
+                    Reference No
+                </th>
+                <th>
+                    Account Id
+                </th>
+                <th>
+                    Account Name
+                </th>
+                <th width="100px">
+                    Debit
+                </th>
+                <th width="100px">
+                    Credit
+                </th>
+                <th>
+                    Description
+                </th>
+                <th>
+                    Supplier
+                </th>
+                <th>
+                    Payee/Invoice
+                </th>
+                <th>
+                    Pay Amount
+                </th>
+                <th width="80px">
+                    Action
+                </th>
+                </thead>
+                <tr data-ng-repeat="j in listJournal">
+                    <td>
+                        <span data-ng-bind="$index + 1"></span>
+                    </td>
+                    <td>
+                        <span data-ng-bind="j.reference_id"></span>
+                    </td>
+                    <td>
+                        <span data-ng-bind="j.account_id"></span>
+                    </td>
+                    <td>
+                        <span data-ng-bind="j.account_name"></span>
+                    </td>
+                    <td>
+                        <input type="text" class="form-control" data-ng-model="j.debit" data-ng-change="getTotal();"/>
+                    </td>
+                    <td>
+                        <input type="text" class="form-control" data-ng-model="j.credit" data-ng-change="getTotal();"/>
+                    </td>
+                    <td>
+                        {{j.note}}
+                    </td>
+                    <td>
+                        {{j.supplier_name}}
+                    </td>
+                    <td>
+                        {{j.payee_invoice}}
+                    </td>
+                    <td>
+                        {{j.pay_amount | currency}}
+                    </td>
+                    <td>
+                        <button
+                            class="btn btn-danger"
+                            data-ng-click="remove($index);"
+                        >
+                            <span class="fa fa-close"></span>
+                        </button>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <table class="table">
+            <tr>
+                <td align="right">
+                    <b>Grand Total Debit:</b>
+                    {{total_debit | currency}}
+                </td>
+                <td>
+                    <b>Grand Total Credit:</b>
+                    {{total_credit | currency}}
+                </td>
+            </tr>
+        </table>
+        <table width="100%">
+            <tr>
+                <td align="right">
+                    <button
+                        class="btn btn-success"
+                        data-ng-click="save();"
+                        data-ng-disabled="disable"
+                    >
+                        <span class="fa fa-save"></span>
+                        Save
+                    </button>
+                </td>
+            </tr>
+        </table>
+        <div
+            data-ng-if="invoiceList.lenght == 0"
+        >
+            <div class="alert alert-warning alert-dismissible">
+                <strong>Warning!</strong> No Item.
+            </div>
+        </div>
+    </div>
+</div>
+</div>

@@ -1,0 +1,106 @@
+<form data-ng-submit="save();" name="myForm">
+<div
+	class="modal fade"
+	id="account-chart-popup"
+	data-keyboard="false"
+	data-backdrop="static"
+>
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button
+					type="button"
+					class="close"
+					data-dismiss="modal"
+					data-ng-click="clear();"
+				>
+					<span>&times;</span>
+				</button>
+				<h4>
+					<label>Chart Account</label>
+				</h4>
+	      	</div>
+			<div class="modal-body">
+				<div class="tab-content">
+					<table class="table table-bordered">
+						<tr>
+							<td>
+								Name:
+							</td>
+							<td>
+								<input
+									type="text"
+									class="form-control"
+									data-ng-model="name"
+									required
+								/>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								Account Type:
+							</td>
+							<td>
+								<select
+									data-ng-model="account_type_id"
+									data-ng-change="checkValue(account_type_id);"
+									data-ng-options="account_type.id as account_type.name for account_type in accountType.elements"
+									data-ng-selected="account_type_id == account_type.id"
+									class="form-control"
+									required
+								>
+									<option value="">--Select--</option>
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								Code:
+							</td>
+							<td>
+								<input
+									type="text"
+									class="form-control"
+									data-ng-model="account_code"
+									maxlength="8"
+									required
+								/>
+								<span data-ng-show="min_value != ''">
+									Min Value:
+									<span style="color: red; font-weight: bold;">[{{min_value}}]</span>
+								</span>
+								<span data-ng-show="min_value != ''">
+									Max Value:
+									<span style="color: red; font-weight: bold;">[{{max_value}}]</span>
+								</span>
+                                <div class="alert alert-warning" id="success-alert" data-ng-show="!message">
+                                    <button type="button" class="close" data-dismiss="alert">x</button>
+                                    <strong>Warning! </strong>
+                                    Please Check Min Max Value.
+                                </div>
+							</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button
+					class="btn btn-default"
+					data-dismiss="modal"
+					data-ng-click="clear();"
+				>
+					Close
+				</button>
+				<button
+					class="btn btn-primary"
+					data-ng-disabled="!disable"
+				>
+					Save
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+</form>
+
+

@@ -1,0 +1,133 @@
+<div class="panel panel-default">
+	<div class="panel-heading">
+		Balance Sheet Report
+	</div>
+	<div class="panel-body">
+		<table class="table table-bordered">
+			<tr>
+				<td width="100px">
+					Us Of Date:
+				</td>
+				<td width="270px">
+					<div cambodia-date-picker date-format="y-MM-dd" class="input-group">
+						<input type="text" class="form-control" data-ng-model="from_date"/>
+						<span class="input-group-btn">
+				        	<button class="btn btn-default" type="button">
+				        		<i class="fa fa-calendar"></i>
+				        	</button>
+						</span>
+				    </div>
+				</td>
+				<td>
+					<button class="btn btn-success margin-top" data-ng-click="init();">
+						<i class="fa fa-hourglass-half"></i>
+						Filter
+					</button>
+					<button class="btn btn-default margin-top" data-ng-click="print();">
+						<i class="fa fa-print"></i>
+						Print
+					</button>
+				</td>
+			</tr>
+		</table>
+
+		<div data-ng-if="balanceSheet" id="print">
+			<div class="alert alert-warning" data-ng-if="total_liability != total_asset">
+				<p>
+					<b>Warning:</b>
+					Your Accounting Equation Is Not Equal.
+				</p>
+			</div>
+			<table width="100%">
+				<tr>
+					<td align="center">
+						<img src="images/IMI.jpg" width="350px"/>
+						<h4>
+							Balance Sheet Report
+						</h4>
+						{{from_date}}
+					</td>
+				</tr>
+			</table>
+			<br/>
+			<table width="100%">
+				<tr>
+					<td>
+						<ul data-ng-repeat="b in balanceSheet.master">
+							<table width="100%">
+								<tr>
+									<td>
+										<li style="list-style:none;">
+											{{b.name}}
+										</li>
+										<ul data-ng-repeat="d in balanceSheet.detail" data-ng-if="b.id == d.balance_sheet_id">
+											<table width="100%">
+												<tr>
+													<td width="90%">
+														<li style="list-style:none;">
+															{{d.name}}
+															..........................................................
+														</li>
+														<ul data-ng-repeat="ad in balanceSheet.detail_sub" data-ng-if="ad.account_type_id == d.id">
+															<table width="100%">
+																<tr>
+																	<td style="width: 100%">
+																		{{ad.name}}
+																		.............................................
+																	</td>
+																	<td align="right" valign="top">
+																		<span
+																			data-ng-repeat="smds in balanceSheet.sum_detail_sub"
+																			data-ng-if="ad.id == smds.account_chart_id"
+																		>
+																			<b style="text-decoration: underline;">
+																				{{smds.total | currency}}
+																			</b>
+																		</span>
+																	</td>
+																</tr>
+															</table>
+														</ul>
+													</td>
+													<td align="right" valign="top" style="float: right;">
+														<span
+															data-ng-repeat="smd in balanceSheet.sum_detail"
+															data-ng-if="d.id == smd.account_type_id"
+														>
+															<b style="text-decoration: underline;">{{smd.total | currency}}</b>
+														</span>
+													</td>
+												</tr>
+											</table>
+										</ul>
+									</td>
+									<td valign="top" style="float: right;">
+										<span
+											data-ng-repeat="sm in balanceSheet.sum_master"
+											data-ng-if="b.id == sm.type_of_account_report"
+										>
+											<b>{{sm.total | currency}}</b>
+										</span>
+									</td>
+								</tr>
+							</table>
+						</ul>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<div
+			data-ng-if="balanceSheet.count == 0"
+		>
+			<div class="alert alert-warning alert-dismissible">
+				<strong>Warning!</strong> No Report.
+			</div>
+		</div>
+		<div
+			data-ng-if="!loading"
+			class="align_center"
+		>
+			<i class="fa fa-refresh fa-spin" style="font-size: 100px;"></i>
+		</div>
+	</div>
+</div>

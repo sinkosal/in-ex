@@ -1,0 +1,19 @@
+# Begin Ultimate SEO V2.2d 
+Options +FollowSymLinks
+RewriteEngine On 
+
+  # RewriteBase instructions 
+  # Change RewriteBase dependent on how your shop is accessed as below. 
+  # http://www.mysite.com = RewriteBase / 
+  # http://www.mysite.com/catalog/ = RewriteBase /catalog/  
+  # http://www.mysite.com/catalog/shop/ = RewriteBase /catalog/shop/ 
+
+  # Change the following line using the instructions above  
+  
+RewriteBase /imi/
+
+# End Ultimate SEO V2.2d
+
+# start api
+RewriteRule ^api/ api/index.php [L,QSA]
+# /end api

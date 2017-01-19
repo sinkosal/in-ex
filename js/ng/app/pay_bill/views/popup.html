@@ -1,0 +1,130 @@
+<form data-ng-submit="saveProduct();" name="myForm">
+<div
+    class="modal fade"
+    id="purchase-pop-up"
+    data-keyboard="false"
+    data-backdrop="static"
+>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4>
+                    <label>Purchase</label>
+                </h4>
+            </div>
+            <div class="modal-body">
+                <table class="table table-bordered">
+                    <tr>
+                        <td>
+                            Product Type:
+                        </td>
+                        <td>
+                            <select
+                                data-ng-options="product_type.id as product_type.name for product_type in ProductType.elements"
+                                data-ng-init="product_type_id == product_type.id"
+                                data-ng-model="products_type"
+                                required
+                                class="form-control"
+                            >
+                                <option value="">--Select--</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Name:
+                        </td>
+                        <td>
+                            <input
+                                type="text"
+                                class="form-control"
+                                data-ng-model="products_name"
+                                required="required"
+                            />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Barcode:
+                        </td>
+                        <td>
+                            <input
+                                type="text"
+                                class="form-control"
+                                data-ng-model="barcode"
+                            />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Price In:
+                        </td>
+                        <td>
+                            <input
+                                type="text"
+                                class="form-control"
+                                required
+                                data-ng-model="products_price_in"
+                            />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Price Out:
+                        </td>
+                        <td>
+                            <input
+                                type="text"
+                                class="form-control"
+                                required
+                                data-ng-model="products_price_out"
+                            />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Qty:
+                        </td>
+                        <td>
+                            <input
+                                type="text"
+                                class="form-control"
+                                data-ng-disabled="qty"
+                                data-ng-model="products_quantity"
+                            />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Description:
+                        </td>
+                        <td>
+                            <input
+                                type="text"
+                                class="form-control"
+                                data-ng-model="products_description"
+                            />
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button
+                    class="btn btn-primary"
+                    data-dismiss="modal"
+                    data-ng-click="clearProduct();"
+                >
+                    Close
+                </button>
+                <button
+                    class="btn btn-success"
+                    data-ng-disabled="!disable"
+                >
+                    Save
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+</form>
+

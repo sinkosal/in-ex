@@ -1,0 +1,260 @@
+<form data-ng-submit="save();" name="myForm">
+	<div
+			class="modal fade"
+			id="staff-list-popup"
+			data-keyboard="false"
+			data-backdrop="static"
+			>
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button
+						type="button"
+						class="close"
+						data-dismiss="modal"
+						data-ng-click="clear();"
+					>
+						<span>&times;</span>
+					</button>
+					<h4>
+						<label>Revenue</label>
+					</h4>
+				</div>
+				<div class="modal-body">
+					<div class="tab-content">
+						<table class="table table-bordered">
+							<tr>
+								<td>
+									Revenue Type:
+								</td>
+								<!--<td>
+									<input
+										type="text"
+										class="form-control"
+										data-ng-model="type"
+										required="required"
+									/>
+								</td>-->
+								<td>
+									<select
+											data-ng-model="type"
+											data-ng-options="customer_type.id as customer_type.name for customer_type in customerType.elements"
+											class="form-control"
+									>
+										<option value="">--Select--</option>
+									</select>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									Amount:
+								</td>
+								<td>
+									<input
+										type="text"
+										class="form-control"
+										data-ng-model="name"
+										required="required"
+									/>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									Rate:
+								</td>
+								<td>
+									<select
+										class="form-control"
+										data-ng-model="sex"
+										data-ng-options="gender for gender in ['Male', 'Female']"
+										data-ng-init="sex == gender"
+									>
+										<option value="">--Select--</option>
+									</select>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									Total:
+								</td>
+								<td>
+									<input
+										type="text"
+										class="form-control"
+										data-ng-model="identity_card"
+										only-numbers
+									/>
+								</td>
+							</tr>
+							<tr>
+								<!--<td>
+									Position:
+								</td>
+								<td>
+									<input
+										type="text"
+										class="form-control"
+										data-ng-model="position"
+									/>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									Basic Salary:
+								</td>
+								<td>
+									<input
+										type="text"
+										class="form-control"
+										data-ng-model="basic_salary"
+										required="required"
+										only-numbers
+									/>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									Phone:
+								</td>
+								<td>
+									<input
+										type="text"
+										class="form-control"
+										data-ng-model="phone"
+										required="required"
+									/>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									Address:
+								</td>
+								<td>
+									<input
+										type="text"
+										class="form-control"
+										data-ng-model="address"
+									/>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									Dob:
+								</td>
+								<td>
+									<div cambodia-date-picker date-format="y/MM/dd" class="input-group">
+										<input type="text" class="form-control" data-ng-model="dob"/>
+										<span class="input-group-btn">
+								        	<button class="btn btn-default" type="button">
+								        		<i class="fa fa-calendar"></i>
+								        	</button>
+										</span>
+								    </div>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									spouse:
+								</td>
+								<td>
+									<input
+										type="text"
+										class="form-control"
+										data-ng-model="spouse"
+										only-numbers
+									/>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									Minor:
+								</td>
+								<td>
+									<input
+										type="text"
+										class="form-control"
+										only-numbers
+										data-ng-model="minor"
+									/>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									Start Work:
+								</td>
+								<td>
+									<div cambodia-date-picker date-format="y/MM/dd" class="input-group">
+										<input type="text" class="form-control" data-ng-model="start_work"/>
+										<span class="input-group-btn">
+								        	<button class="btn btn-default" type="button">
+								        		<i class="fa fa-calendar"></i>
+								        	</button>
+										</span>
+								    </div>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									Start Contract:
+								</td>
+								<td>
+									<div cambodia-date-picker date-format="y/MM/dd" class="input-group">
+										<input type="text" class="form-control" data-ng-model="start_contract"/>
+										<span class="input-group-btn">
+								        	<button class="btn btn-default" type="button">
+								        		<i class="fa fa-calendar"></i>
+								        	</button>
+										</span>
+								    </div>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									End Contract:
+								</td>
+								<td>
+									<div cambodia-date-picker date-format="y/MM/dd" class="input-group">
+										<input type="text" class="form-control" data-ng-model="end_contract"/>
+										<span class="input-group-btn">
+								        	<button class="btn btn-default" type="button">
+								        		<i class="fa fa-calendar"></i>
+								        	</button>
+										</span>
+								    </div>
+								</td>!-->
+							</tr>
+							<tr>
+								<td>
+									Note:
+								</td>
+								<td>
+									<textarea
+										class="form-control"
+										data-ng-model="note"
+									></textarea>
+								</td>
+							</tr>
+						</table>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button
+						class="btn btn-default"
+						data-dismiss="modal"
+						data-ng-click="clear();"
+					>
+						Close
+					</button>
+					<button
+							class="btn btn-primary"
+							data-ng-disabled="!disable"
+							>
+						Save
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</form>
+
+

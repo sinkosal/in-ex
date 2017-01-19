@@ -1,0 +1,136 @@
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <b>Revenue</b>
+    </div>
+    <div class="panel-body">
+        <button
+            class="btn btn-default"
+            data-toggle="modal"
+            data-target="#staff-list-popup"
+        >
+            <span class="fa fa-plus-circle"></span>
+            Add New
+        </button>
+        Total record: {{totalItems}}
+        <br/>
+        <table class="table table-bordered">
+            <tr>
+                <td>
+                    <input type="text" class="form-control" data-ng-model="search_id" placeholder="Search By Id ..."/>
+                </td>
+                <td>
+                    <input type="text" class="form-control" data-ng-model="search_name" placeholder="Search By Name ..."/>
+                </td>
+                <td>
+                    <button class="btn btn-primary" data-ng-click="search();">Search</button>
+                </td>
+            </tr>
+        </table>
+        <table class="table table-bordered table-striped">
+            <thead>
+                <th class="hidden">
+                    Id
+                </th>
+                <th>
+                    Date
+                </th>
+                <th>
+                    Revenue Type
+                </th>
+                <th>
+                    Amount
+                </th>
+                <th>
+                    Rate
+                </th>
+                <th>
+                    Total
+                </th>
+               <!-- <th>
+                    Address
+                </th>
+                <th>
+                    Phone
+                </th>!-->
+                <th width="150px">
+                    Action
+                </th>
+            </thead>
+            <tr data-ng-repeat="staff in staffList.elements " >
+                <td class="hidden">
+                    <span data-ng-bind="staff.id"></span>
+                </td>
+                <td>
+                    <span data-ng-bind="staff.create_date"></span>
+                </td>
+                <td>
+                    <span data-ng-bind="staff.type"></span>
+                </td>
+                <td>
+                    <span data-ng-bind="staff.name" ></span> <!--amount!-->
+                </td>
+                <td>
+                    <span data-ng-bind="staff.sex"></span> <!--Rate-->
+                </td>
+                <td>
+                    <span data-ng-bind="staff.identity_card"></span> <!--Total-->
+                </td>
+              <!--  <td>
+                    <span data-ng-bind="staff.address"></span>
+                </td>
+                <td>
+                    <span data-ng-bind="staff.phone"></span>
+                </td>!-->
+                <td>
+                    <button class="btn btn-default" data-ng-click="edit(staff);">
+                        <span class="fa fa-edit"></span>
+                    </button>
+                    <button data-ng-hide="true" class="btn btn-danger" data-ng-click="remove(staff.id, $index);">
+                        <span class="fa fa-close"></span>
+                    </button>
+                    <button
+                        class="btn btn-success"
+                        data-ng-click="updateStatus(staff);"
+                        data-ng-if="staff.status == 1"
+                    >
+                        <span class="fa fa-check-square-o"></span>
+                    </button>
+                    <button
+                        class="btn btn-warning"
+                        data-ng-if="staff.status == 0"
+                        data-ng-click="updateStatus(staff);"
+                    >
+                        <span class="fa fa-minus-square-o"></span>
+                    </button>
+                </td>
+            </tr>
+        </table>
+        <div
+            data-ng-if="staffList.elements == 0"
+        >
+            <div class="alert alert-warning alert-dismissible">
+                <strong>Warning!</strong> No Staff List.
+            </div>
+        </div>
+        <div
+            data-ng-if="!staffList"
+            class="align_center"
+        >
+            <i class="fa fa-refresh fa-spin" style="font-size: 100px;"></i>
+        </div>
+    </div>
+</div>
+<div
+    class="panel-footer"
+    data-ng-show="totalItems > 10"
+>
+<pagination
+    total-items="totalItems"
+    ng-model="currentPage"
+    ng-change="pageChanged()"
+    max-size="5"
+    items-per-page="10"
+    boundary-links="true"
+></pagination>
+</div>
+<staff:list:popup></staff:list:popup>

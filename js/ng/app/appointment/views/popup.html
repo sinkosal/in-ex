@@ -1,0 +1,219 @@
+<div
+	class="modal fade"
+	id="appointment-popup"
+	data-keyboard="false"
+	data-backdrop="static"
+>
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button
+					type="button"
+					class="close"
+					data-dismiss="modal"
+					data-ng-click="clear();"
+				>
+					<span>&times;</span>
+				</button>
+				<h4>
+					<label>Appointment</label>
+				</h4>
+	      	</div>
+			<div class="modal-body">
+				<div class="tab-content">
+					<table class="table table-bordered">
+						<tr>
+							<td>
+								Invoice No:
+							</td>
+							<td>
+								<ui-select
+									ng-model="invoice_list.selected"
+									theme="select2"
+									data-ng-change="changeCustomer(invoice_list);"
+									data-ng-disabled="disabled"
+									reset-search-input="false"
+									style="width: 100%;"
+									data-ng-show="invoice_no == ''"
+								>
+									<ui-select-match placeholder="Enter An Customer Name...">
+										{{$select.selected.invoice_no}}
+									</ui-select-match>
+									<ui-select-choices
+										repeat="invoice_list in invoiceList track by $index"
+										refresh="refreshInvoiceList($select.search)"
+										refresh-delay="0"
+									>
+										<div data-ng-bind-html="invoice_list.invoice_no | highlight: $select.search"></div>
+									</ui-select-choices>
+								</ui-select>
+								<i class="fa fa-refresh" data-ng-click="invoice_list = {}"></i>
+								<input
+									type="text"
+									class="form-control"
+									data-ng-model="invoice_no"
+									data-ng-show="invoice_no != ''"
+									readonly
+								/>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								Customer Name:
+							</td>
+							<td>
+								<input
+									type="text"
+									class="form-control"
+									data-ng-model="invoice_list.selected.customer_name"
+									data-ng-show="customer_name == ''"
+								/>
+								<input
+									type="text"
+									class="form-control"
+									data-ng-model="customer_name"
+									data-ng-show="customer_name != ''"
+								/>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								Customer Gender:
+							</td>
+							<td>
+								<select class="form-control" data-ng-model="customer_gender">
+									<option value="Male">Male</option>
+									<option value="Female">Female</option>
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								Customer DOB:
+							</td>
+							<td>
+								<div cambodia-date-picker date-format="y-MM-dd" class="input-group">
+									<input type="text" class="form-control" data-ng-model="customer_dob"/>
+									<span class="input-group-btn">
+							        	<button class="btn btn-default" type="button">
+							        		<i class="fa fa-calendar"></i>
+							        	</button>
+									</span>
+							    </div>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								Customer Telephone:
+							</td>
+							<td>
+								<input
+									type="text"
+									class="form-control"
+									data-ng-model="invoice_list.selected.customer_tel"
+									data-ng-show="tel == ''"
+								/>
+								<input
+									type="text"
+									class="form-control"
+									data-ng-model="tel"
+									data-ng-show="tel != ''"
+								/>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								Customer Address:
+							</td>
+							<td>
+								<textarea
+									class="form-control"
+									data-ng-model="customer_address"
+								>									
+								</textarea>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								Customer Country:
+							</td>
+							<td>
+								<select
+									data-ng-model="customer_country"
+									data-ng-options="country.countries_name as country.countries_name for country in countries.elements"
+									class="form-control"
+								>
+									<option value="">--Select--</option>
+								</select>
+							</td>
+						</tr>
+					</table>
+					<div class="alert alert-warning" id="success-alert" data-ng-show="alertWarning">
+						<button type="button" class="close" data-dismiss="alert">x</button>
+						<strong>Warning! </strong>
+						Please Select Invoice No.
+					</div>
+					<table class="table">
+						<tr>
+							<td colspan="2">
+								Appointment Date
+							</td>
+							<td align="right" colspan="2">
+								<button class="btn btn-primary" data-ng-click="add();">
+									<i class="fa fa-hand-o-right"></i>
+									Add Appointment
+								</button>
+							</td>
+						</tr>
+						<tr data-ng-repeat="l in dateList track by $index">
+							<td width="30px">
+								{{$index + 1}}
+							</td>
+							<td>
+								<div cambodia-date-picker date-format="y-MM-dd" class="input-group">
+									<input type="text" placeholder="Input Date..." class="form-control" data-ng-model="l.date"/>
+									<span class="input-group-btn">
+							        	<button class="btn btn-default" type="button">
+							        		<i class="fa fa-calendar"></i>
+							        	</button>
+									</span>
+							    </div>
+							</td>
+							<td>
+								<input
+									type="text"
+									class="form-control"
+									placeholder="Input Note..."
+									data-ng-model="l.note"
+								/>
+							</td>
+							<td>
+								<button class="btn btn-danger" data-ng-click="remove($index);">
+									<i class=" fa fa-trash"></i>
+								</button>
+							</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button
+					class="btn btn-default"
+					data-dismiss="modal"
+					data-ng-click="clear();"
+				>
+					Close
+				</button>
+				<button
+					class="btn btn-success"
+					data-ng-disabled="!disable"
+					data-ng-click="save();"
+				>
+					Save
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+

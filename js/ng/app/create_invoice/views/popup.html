@@ -1,0 +1,321 @@
+<form data-ng-submit="save();" name="myForm">
+<div
+	class="modal fade"
+	id="create-invoice-popup"
+	data-keyboard="false"
+	data-backdrop="static"
+>
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-body">
+				<div class="tab-content" id="print">
+					<div style="text-align: center;">
+						<img src="images/IMI.jpg" width="350px"/>
+						<h6>
+							<span data-ng-bind="company.company_name"></span>
+						</h6>
+						<span data-ng-bind-html="company.description"></span>
+					</div>
+					<table width="100%">
+						<tr>
+							<td>
+								<b>Create By:</b>
+								<span style="text-transform: capitalize;">
+									{{user}}
+								</span>
+							</td>
+							<td></td>
+							<td>
+								<b>Invoice No:</b>
+								{{in_no}}
+							</td>
+						</tr>
+						<tr>
+							<td width="30%">
+								<b>Print Date: </b> {{today | date: "dd/MMMM/yyyy, h:mm:ss a"}}
+							</td>
+							<td width="40%" align="center">
+								<b><h4>RECEIPT</h4></b>
+							</td>
+							<td width="30%">
+								<b>Payment Method:</b> {{data.invoice.pay_type}}
+							</td>
+						</tr>
+					</table>
+					<table width="100%">
+						<tr>
+							<td width="110px">
+								<b>Customer ID</b>
+							</td>
+							<td>:</td>
+							<td width="110px">
+								<b>{{data.invoice.customer_id}}</b>
+							</td>
+
+							<td width="45px">
+								<b>Name</b>
+							</td>
+							<td>:</td>
+							<td>
+								{{data.invoice.customer_name}}
+							</td>
+
+							<td width="35px">
+								<b>Tel</b>
+							</td>
+							<td>:</td>
+							<td>
+								{{data.invoice.customer_tel}}
+							</td>
+
+							<td width="65px">
+								<b>Doctor</b>
+							</td>
+							<td>:</td>
+							<td>
+								{{data.invoice.doctor_name}}
+							</td>
+						</tr>
+						<tr>
+						</tr>
+						<tr>
+
+						</tr>
+						<tr>
+
+						</tr>
+					</table>
+					<br/>
+					<table
+						class="table-print"
+					>
+						<tr>
+							<th>
+								No
+							</th>
+							<th>
+								Description
+							</th>
+							<th>
+								Qty
+							</th>
+							<th>
+								Unit/Price
+							</th>
+							<th>
+								Total Price
+							</th>
+						</tr>
+						<tr data-ng-repeat="item in data.invoice_detail">
+							<td>
+								{{$index +1}}
+							</td>
+							<td>
+								{{item.service_name}}
+							</td>
+							<td>
+								{{item.qty}}
+							</td>
+							<td>
+								{{item.unit_price | currency}}
+							</td>
+							<td>
+								{{item.total | currency}}
+							</td>
+						</tr>
+						<tr valign="right">
+							<td
+								rowspan="7"
+								colspan="2"
+								style="
+									width: 400px;
+									text-align: center;
+									vertical-align: middle;
+									text-transform: capitalize;
+								"
+							>
+								{{data.invoice.grand_total | words}}
+							</td>
+							<td align="right" colspan="2">
+								<b>Sub Total :</b>
+							</td>
+							<td>
+								<span
+									data-ng-bind="data.invoice.sub_total | currency">
+								</span>
+							</td>
+						</tr>
+						<tr valign="right">
+							<td align="right" colspan="2" valign="top">
+								<b>Discount : </b>
+							</td>
+							<td>
+								{{data.invoice.discount}}
+								<span data-ng-show="data.invoice.discount_type == 'percent'">
+									%
+								</span>
+								<span data-ng-show="data.invoice.discount_type == 'dollar'">
+									$
+								</span>
+							</td>
+						</tr>
+						<tr valign="right">
+							<td align="right" colspan="2">
+								<b>Total Discount : </b>
+							</td>
+							<td>
+								<span data-ng-bind="data.invoice.total_discount | currency"></span>
+							</td>
+						</tr>
+						<tr valign="right">
+							<td align="right" colspan="2">
+								<b>Grand Total : </b>
+							</td>
+							<td>
+								<span
+									data-ng-bind="data.invoice.grand_total | currency">
+								</span>
+							</td>
+						</tr>
+						<tr valign="right">
+							<td align="right" colspan="2">
+								<b>Payment Method : </b>
+							</td>
+							<td>
+								{{data.invoice.pay_type}}
+							</td>
+						</tr>
+						<tr>
+							<td align="right" colspan="2">
+								<b>Payment : </b>
+							</td>
+							<td>
+								{{data.invoice.deposit | currency}}
+							</td>
+						</tr>
+						<tr>
+							<td align="right" colspan="2">
+								<b>Remaining : </b>
+							</td>
+							<td>
+								<span data-ng-bind="data.invoice.balance | currency"></span>
+							</td>
+						</tr>
+					</table>
+					<table width="100%">
+						<tr>
+							<td height="110px">
+								Cashier
+							</td>
+							<td height="110px" align="right">
+								Customer
+							</td>
+						</tr>
+						<tr>
+							<td>
+								..............
+							</td>
+							<td align="right">
+								..............
+							</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button
+					class="btn btn-default"
+					data-dismiss="modal"
+				>
+					Close
+				</button>
+				<button
+					class="btn btn-primary"
+					data-ng-click="print();"
+				>
+					<i class="fa fa-print"></i>
+					Print
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+</form>
+<div
+	class="modal fade"
+	id="appointment-popup"
+	data-keyboard="false"
+	data-backdrop="static"
+>
+	<div class="modal-dialog modal-md">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button
+					type="button"
+					class="close"
+					data-dismiss="modal"
+					data-ng-click="close();"
+				>
+					<span>&times;</span>
+				</button>
+				<h4>
+					<label>Make Appointment</label>
+				</h4>
+			</div>
+			<div class="modal-body">
+				<table class="table">
+					<tr>
+						<td colspan="2">
+							Appointment Date
+						</td>
+						<td align="right" colspan="2">
+							<button class="btn btn-default" data-ng-click="addAppointment();">
+								<i class="fa fa-hand-o-right"></i>
+								Add Appointment
+							</button>
+						</td>
+					</tr>
+					<tr data-ng-repeat="l in dateList track by $index">
+						<td width="30px">
+							{{$index + 1}}
+						</td>
+						<td>
+							<div cambodia-date-picker date-format="y-MM-dd" class="col-md-4">
+								<input
+									type="text"
+									class="form-control date"
+									data-ng-model="l.date"
+									placeholder="Input Date..."
+								/>
+							</div>
+						</td>
+						<td>
+							<input
+								type="text"
+								class="form-control"
+								placeholder="Input Note..."
+								data-ng-model="l.note"
+							/>
+						</td>
+						<td>
+							<button class="btn btn-danger" data-ng-click="removeAppointment($index);">
+								<i class=" fa fa-trash"></i>
+							</button>
+						</td>
+					</tr>
+				</table>
+			</div>
+			<div class="modal-footer">
+				<button
+					class="btn btn-primary"
+					data-dismiss="modal"
+				>
+					<i class="fa fa-save"></i>
+					Close
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+

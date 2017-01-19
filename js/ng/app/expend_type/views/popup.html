@@ -1,0 +1,74 @@
+<form data-ng-submit="save();" name="myForm">
+<div
+	class="modal fade"
+	id="customer-type-popup"
+	data-keyboard="false"
+	data-backdrop="static"
+>
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button
+					type="button"
+					class="close"
+					data-dismiss="modal"
+					data-ng-click="clear();"
+				>
+					<span>&times;</span>
+				</button>
+				<h4>
+					<label>Customer Type</label>
+				</h4>
+	      	</div>
+			<div class="modal-body">
+				<div class="tab-content">
+					<table class="table table-bordered">
+						<tr>
+							<td>
+								Name:
+							</td>
+							<td>
+								<input
+									type="text"
+									class="form-control"
+									data-ng-model="name"
+									required="required"
+								/>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								Description:
+							</td>
+							<td>
+								<input
+									type="text"
+									class="form-control"
+									data-ng-model="description"
+								/>
+							</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button
+					class="btn btn-default"
+					data-dismiss="modal"
+					data-ng-click="clear();"
+				>
+					Close
+				</button>
+				<button
+					class="btn btn-primary"
+					data-ng-disabled="!disable"
+				>
+					Save
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+</form>
+
+

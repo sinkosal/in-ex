@@ -1,0 +1,166 @@
+<div class="panel panel-default">
+	<div class="panel-heading">
+		Daily Cash Report
+	</div>
+	<div class="panel-body">
+		<table class="table table-bordered">
+			<tr>
+				<td width="100px">
+					From Date:
+				</td>
+				<td>
+					<div cambodia-date-picker date-format="y-MM-dd" class="input-group">
+						<input type="text" class="form-control" data-ng-model="from_date"/>
+						<span class="input-group-btn">
+				        	<button class="btn btn-default" type="button">
+				        		<i class="fa fa-calendar"></i>
+				        	</button>
+						</span>
+				    </div>
+				</td>
+				<td width="100px">
+					To Date:
+				</td>
+				<td>
+					<div cambodia-date-picker date-format="y-MM-dd" class="input-group">
+						<input type="text" class="form-control" data-ng-model="to_date"/>
+						<span class="input-group-btn">
+				        	<button class="btn btn-default" type="button">
+				        		<i class="fa fa-calendar"></i>
+				        	</button>
+						</span>
+				    </div>
+				</td>
+				<td>
+					<button class="btn btn-success margin-top" data-ng-click="init();">
+						<i class="fa fa-hourglass-half"></i>
+						Filter
+					</button>
+					<button class="btn btn-default margin-top" data-ng-click="print();">
+						<i class="fa fa-print"></i>
+						Print
+					</button>
+				</td>
+			</tr>
+		</table>
+		<div data-ng-if="caseFlow" id="print">
+			<table width="100%">
+				<tr>
+					<td align="center">
+						<img src="images/IMI.jpg" width="350px"/>
+						<h4>
+							Daily Cash Report
+						</h4>
+						From: {{from_date}} To: {{to_date}}
+					</td>
+				</tr>
+			</table>
+			<br/>
+			<table class="table-print">
+				<tr>
+					<th>
+						No
+					</th>
+					<th>
+						Customer ID
+					</th>
+					<!--<th>-->
+						<!--Cus Old ID-->
+					<!--</th>-->
+					<th>
+						Customer Name
+					</th>
+					<th>
+						Doctor Name
+					</th>
+					<th>
+						Invoice No
+					</th>
+					<th>
+						Invoice Date
+					</th>
+					<th>
+						Cash Payment
+					</th>
+					<th>
+						Bank Payment
+					</th>
+					<th>
+						Bank Charge
+					</th>
+				</tr>
+				<tr data-ng-repeat="i in caseFlow.elements">
+					<td>
+						{{$index +1}}
+					</td>
+					<!--<td>-->
+						<!--<span data-ng-bind="i.customer_id"></span>-->
+					<!--</td>-->
+					<td>
+						<span data-ng-bind="i.customer_id"></span>
+					</td>
+					<td>
+						<span data-ng-bind="i.customer_name"></span>
+					</td>
+					<td>
+						<span data-ng-bind="i.doctor_name"></span>
+					</td>
+					<td>
+						<span data-ng-bind="i.invoice_no"></span>
+					</td>
+					<td>
+						<span data-ng-bind="i.invoice_date"></span>
+					</td>
+					<td>
+						<span data-ng-bind="i.cash_in | currency"></span>
+					</td>
+					<td>
+						<span
+							data-ng-bind="i.bank | currency"
+						></span>
+					</td>
+					<td>
+						%<span data-ng-bind="i.bank_charge"></span>
+					</td>
+				</tr>
+				<tr style="background: #26a69a;">
+					<td colspan="6" align="right">
+						<b>Total:</b>
+					</td>
+					<td>
+						<b>{{total_cash_amount | currency}}</b>
+					</td>
+					<td>
+						<b>{{total_bank_amount | currency}}</b>
+					</td>
+					<td>
+						<b>{{total_bank_charge_amount | currency}}</b>
+					</td>
+				</tr>
+				<tr style="background: #F4BF1E;">
+					<td colspan="6" align="right">
+						<b>Total Income:</b>
+					</td>
+					<td colspan="3">
+						<b>{{total_income_amount | currency}}</b>
+					</td>
+				</tr>
+			</table>
+			<div
+				data-ng-if="caseFlow.count == 0"
+			>
+				<div class="alert alert-warning alert-dismissible">
+					<strong>Warning!</strong> No Report.
+				</div>
+			</div>
+			<br/><br/>
+		</div>
+
+		<div
+			data-ng-if="!loading"
+			class="align_center"
+		>
+			<i class="fa fa-refresh fa-spin" style="font-size: 100px;"></i>
+		</div>
+	</div>
+</div>

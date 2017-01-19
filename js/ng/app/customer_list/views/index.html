@@ -1,0 +1,142 @@
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <b>Customer List</b>
+    </div>
+    <div class="panel-body">
+        <button
+            class="btn btn-default"
+            data-toggle="modal"
+            data-target="#customer-list-popup"
+        >
+            <span class="fa fa-plus-circle"></span>
+            Add New Customer
+        </button>
+        Total record: {{totalItems}}
+        <br/>
+        <table class="table table-bordered">
+            <tr>
+                <td>
+                    <input type="text" class="form-control" data-ng-model="id" placeholder="Search By Id ..."/>
+                </td>
+                <td>
+                    <input type="text" class="form-control" data-ng-model="name" placeholder="Search By Name Or Tel..."/>
+                </td>
+                <td>
+                    <button class="btn btn-primary" data-ng-click="search();">Search</button>
+                </td>
+            </tr>
+        </table>
+        <table class="table table-bordered table-striped">
+            <thead>
+            <th>
+                Id
+            </th>
+            <th>
+                Customer Id
+            </th>
+            <th>
+                Name
+            </th>
+            <th>
+                Type
+            </th>
+            <th>
+                Barcode
+            </th>
+            <th>
+                Sex
+            </th>
+            <th>
+                Tel
+            </th>
+            <th>
+                Address
+            </th>
+            <th>
+                Email
+            </th>
+            <th width="150px">
+                Action
+            </th>
+            </thead>
+            <tr data-ng-repeat="customer in customerList.elements">
+                <td>
+                    <span data-ng-bind="customer.id"></span>
+                </td>
+                <td>
+                    <span data-ng-bind="customer.customerid"></span>
+                </td>
+                <td>
+                    <span data-ng-bind="customer.full_name"></span>
+                </td>
+                <td>
+                    <span data-ng-bind="customer.customer_type[0].name"></span>
+                </td>
+                <td>
+                    <span data-ng-bind="customer.barcode"></span>
+                </td>
+                <td>
+                    <span data-ng-bind="customer.sex"></span>
+                </td>
+                <td>
+                    <span data-ng-bind="customer.tel"></span>
+                </td>
+                <td>
+                    <span data-ng-bind="customer.address"></span>
+                </td>
+                <td>
+                    <span data-ng-bind="customer.email"></span>
+                </td>
+                <td>
+                    <button class="btn btn-default" data-ng-click="edit(customer);">
+                        <span class="fa fa-edit"></span>
+                    </button>
+                    <button class="btn btn-danger" data-ng-hide="true" data-ng-click="remove(customer.id, $index);">
+                        <span class="fa fa-close"></span>
+                    </button>
+                    <button
+                        class="btn btn-success"
+                        data-ng-click="updateStatus(customer);"
+                        data-ng-if="customer.status == 1"
+                    >
+                        <span class="fa fa-check-square-o"></span>
+                    </button>
+                    <button
+                        class="btn btn-warning"
+                        data-ng-if="customer.status == 0"
+                        data-ng-click="updateStatus(customer);"
+                    >
+                        <span class="fa fa-minus-square-o"></span>
+                    </button>
+                </td>
+            </tr>
+        </table>
+        <div
+            data-ng-if="customerList.elements == 0"
+        >
+            <div class="alert alert-warning alert-dismissible">
+                <strong>Warning!</strong> No Customer.
+            </div>
+        </div>
+        <div
+            data-ng-if="!customerList"
+            class="align_center"
+        >
+            <i class="fa fa-refresh fa-spin" style="font-size: 100px;"></i>
+        </div>
+    </div>
+</div>
+<div
+    class="panel-footer"
+    data-ng-show="totalItems > 20"
+>
+<pagination
+    total-items="totalItems"
+    ng-model="currentPage"
+    ng-change="pageChanged()"
+    max-size="5"
+    items-per-page="20"
+    boundary-links="true"
+></pagination>
+</div>
+<customer:list:popup></customer:list:popup>

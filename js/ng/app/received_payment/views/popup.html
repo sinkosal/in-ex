@@ -1,0 +1,209 @@
+<form data-ng-submit="save();" name="myForm">
+<div
+	class="modal fade"
+	id="receive-invoice-popup"
+	data-keyboard="false"
+	data-backdrop="static"
+>
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-body">
+				<div class="tab-content" id="print">
+					<div style="text-align: center;">
+						<img src="images/IMI.jpg" width="350px"/>
+						<h6>
+							<span data-ng-bind="company.company_name"></span>
+						</h6>
+						<span data-ng-bind-html="company.description"></span>
+					</div>
+					<table width="100%">
+						<tr>
+							<td>
+								<b>Create By:</b> {{user}}
+							</td>
+							<td></td>
+							<td>
+								<b>Receive No:</b>
+								{{data.receive_payment[0].receive_payment_no}}
+							</td>
+						</tr>
+						<tr>
+							<td width="30%">
+								<b>Print Date: </b> {{date}}
+							</td>
+							<td width="40%" align="center">
+								<b><h4>RECEIPT</h4></b>
+							</td>
+							<td width="30%">
+								<b>Payment Method:</b> {{data.receive_payment[0].payment_method}}
+							</td>
+						</tr>
+					</table>
+					<table width="100%">
+						<tr>
+							<td width="120px">
+								<b>Customer Id:</b>
+							</td>
+							<td>
+								{{data.receive_payment[0].customer_id}}
+							</td>
+							<td width="55px">
+								<b>Name:</b>
+							</td>
+							<td>
+								{{data.receive_payment[0].customer_name}}
+							</td>
+						</tr>
+					</table>
+					<br/>
+					<table
+						class="table-print"
+					>
+						<tr>
+							<th>
+								No
+							</th>
+							<th>
+								Invoice No
+							</th>
+							<th>
+								Total Amount
+							</th>
+							<th>
+								Total Deposit
+							</th>
+							<th>
+								Balance
+							</th>
+							<th>
+								Payment
+							</th>
+							<th>
+								Last Balance
+							</th>
+						</tr>
+						<tr data-ng-repeat="item in data.receive_payment_detail">
+							<td>
+								{{$index +1}}
+							</td>
+							<td>
+								{{item.invoice_no}}
+							</td>
+							<td>
+								{{item.sub_total | currency}}
+							</td>
+							<td>
+								{{item.deposit | currency}}
+							</td>
+							<td>
+								{{item.balance | currency}}
+							</td>
+							<td>
+								{{item.payment_next | currency}}
+							</td>
+							<td>
+								{{item.balance - item.payment_next | currency}}
+							</td>
+						</tr>
+						<tr valign="right">
+							<td align="right" width="80%" colspan="6">
+								<b>Total Balance:</b>
+							</td>
+							<td>
+								<span
+									data-ng-bind="data.receive_payment[0].total_balance | currency">
+								</span>
+							</td>
+						</tr>
+						<tr valign="right">
+							<td align="right" width="80%" colspan="6">
+								<b>Discount:</b>
+							</td>
+							<td>
+								<span
+									data-ng-bind="data.receive_payment[0].discount_type">
+								</span>
+							</td>
+						</tr>
+						<tr valign="right">
+							<td align="right" width="80%" colspan="6">
+								<b>Discount Amount:</b>
+							</td>
+							<td>
+								<span
+									data-ng-bind="data.receive_payment[0].discount_amount">
+								</span>
+							</td>
+						</tr>
+						<tr valign="right">
+							<td align="right" width="80%" colspan="6">
+								<b>Total Discount Amount:</b>
+							</td>
+							<td>
+								<span
+										data-ng-bind="data.receive_payment[0].total_discount_amount | currency">
+								</span>
+							</td>
+						</tr>
+						<tr valign="right">
+							<td align="right" width="80%" colspan="6">
+								<b>Total Payment:</b>
+							</td>
+							<td>
+								<span
+										data-ng-bind="data.receive_payment[0].total_payment_amount | currency">
+								</span>
+							</td>
+						</tr>
+						<tr valign="right">
+							<td align="right" width="80%" colspan="6">
+								<b>Total Last Balance:</b>
+							</td>
+							<td>
+								<span
+										data-ng-bind="data.receive_payment[0].total_last_balance | currency">
+								</span>
+							</td>
+						</tr>
+					</table>
+					<table width="100%">
+						<tr>
+							<td height="110px">
+								Cashier
+							</td>
+							<td height="110px" align="right">
+								Customer
+							</td>
+						</tr>
+						<tr>
+							<td>
+								..............
+							</td>
+							<td align="right">
+								..............
+							</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button
+					class="btn btn-default"
+					data-dismiss="modal"
+				>
+					Close
+				</button>
+				<button
+					class="btn btn-primary"
+					data-ng-click="print();"
+				>
+					<i class="fa fa-print"></i>
+					Print
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+</form>
+
+

@@ -1,0 +1,316 @@
+<div class="panel panel-default">
+	<div class="panel-heading">
+		Payment
+	</div>
+	<div class="panel-body">
+		<table width="50%">
+			<tr>
+				<td>
+					<button class="btn btn-success" data-ng-disabled="!disable" data-ng-click="save();">
+						<i class="glyphicon glyphicon-floppy-saved"></i>
+						Save
+					</button>
+				</td>
+				<td width="140px">
+					Receive Payment No:
+				</td>
+				<td>
+					<input
+						type="text"
+						class="form-control"
+						data-ng-model="receive_payment_no"
+						placeholder="Receive Payment No ..."
+					/>
+				</td>
+			</tr>
+		</table>
+		<table class="table table-bordered">
+			<tr>
+				<td>
+					Invoice No:
+				</td>
+				<td>
+					<input
+						class="form-control"
+						type="text"
+						data-ng-model="invoice_no"
+						placeholder="Input Invoice No To Search ..."
+						data-ng-keypress="($event.which === 13) ? search() : 0"
+
+					/>
+				</td>
+				<td>
+					Customer:
+				</td>
+				<td width="300px">
+					<ui-select
+						ng-model="customer_list.selected"
+						theme="select2"
+						data-ng-disabled="disabled"
+						reset-search-input="false"
+						data-ng-change="getCustomer(customer_list.selected);"
+						style="width: 255px;"
+					>
+						<ui-select-match placeholder="Select or Search Customer in the list...">
+							{{$select.selected.full_name}}
+						</ui-select-match>
+						<ui-select-choices
+							repeat="customer_list in customers track by $index"
+							refresh="refreshCustomerList($select.search)"
+							refresh-delay="0"
+						>
+							<div data-ng-bind-html="customer_list.full_name | highlight: $select.search"></div>
+						</ui-select-choices>
+					</ui-select>
+					<i class="fa fa-refresh" data-ng-click="customer_list = {}"></i>
+				</td>
+				<td>
+					Date:
+				</td>
+				<td>
+					<div cambodia-date-picker date-format="y-MM-dd" class="input-group">
+						<input type="text" class="form-control" data-ng-model="date" data-ng-disabled="role != 'Admin'"/>
+						<span class="input-group-btn">
+				        	<button class="btn btn-default" type="button">
+				        		<i class="fa fa-calendar"></i>
+				        	</button>
+						</span>
+				    </div>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					Note:
+				</td>
+				<td width="300px" colspan="6">
+					<textarea
+						data-ng-model="note"
+						class="form-control"
+						rows="4"
+						placeholder="Note ..."
+					>
+					</textarea>
+				</td>
+			</tr>
+		</table>
+		<div class="scroll">
+			<table class="table table-bordered table-striped">
+				<tr>
+					<th>
+						No
+					</th>
+					<th>
+						Invoice No
+					</th>
+					<th>
+						Customer ID
+					</th>
+					<th>
+						Customer Name
+					</th>
+					<th>
+						Doctor Name
+					</th>
+					<th>
+						Total Amount
+					</th>
+					<th>
+						Total Deposit
+					</th>
+					<th>
+						Balance
+					</th>
+					<th>
+						Payment
+					</th>
+					<th>
+						Last Balance
+					</th>
+				</tr>
+				<tr data-ng-repeat="i in invoice.elements">
+					<td>
+						{{$index + 1}}
+					</td>
+					<td>
+						{{i.invoice_no}}
+					</td>
+					<td>
+						{{i.customer_id}}
+					</td>
+					<td>
+						{{i.customer_name}}
+					</td>
+					<td>
+						{{i.doctor_name}}
+					</td>
+
+					<td>
+						{{i.sub_total | currency}}
+					</td>
+					<td>
+						{{i.deposit + i.total_discount | currency}}
+					</td>
+					<td>
+						{{i.balance | currency}}
+					</td>
+					<td>
+						<input
+							type="text"
+							placeholder="0.00"
+							only-numbers
+							class="form-control"
+							data-ng-model="i.payment_next"
+							data-ng-change="calculatePayAmount(i.id);"
+						/>
+					</td>
+					<td>
+						<span
+							data-ng-hide="i.balance - i.payment_next <= 0"
+							data-ng-bind="i.balance - i.payment_next | currency"
+						></span>
+						<span
+							data-ng-hide="i.balance - i.payment_next > 0"
+						>
+							$0.00
+						</span>
+					</td>
+				</tr>
+			</table>
+			<div
+				data-ng-if="invoice.count == 0"
+			>
+				<div class="alert alert-warning alert-dismissible">
+					<strong>Warning!</strong> No Invoice Payment.
+				</div>
+			</div>
+			<div
+				data-ng-if="loading"
+				class="align_center"
+			>
+				<i class="fa fa-refresh fa-spin" style="font-size: 100px;"></i>
+			</div>
+		</div>
+		<table class="table table-bordered">
+			<tr valign="right">
+				<td align="right" width="80%">
+					Total Balance:
+				</td>
+				<td>
+					<span
+						data-ng-bind="total_balance | currency">
+					</span>
+				</td>
+			</tr>
+			<tr valign="right">
+				<td align="right">
+					Total Payment Amount:
+				</td>
+				<td>
+					<span
+						data-ng-bind="total_payment_amount | currency">
+					</span>
+				</td>
+			</tr>
+			<tr valign="right">
+				<td align="right" rowspan="2">
+					Discount:
+				</td>
+				<td>
+					Dollar($)
+					<input
+						type="checkbox"
+						data-ng-change="checkTypeDiscount('dollar');"
+						data-ng-model="dollar"
+						value="dollar"
+					/>
+					Percent(%)
+					<input
+						type="checkbox"
+						data-ng-change="checkTypeDiscount('percent');"
+						data-ng-model="percent"
+						value="percent"
+					/>
+				</td>
+			</tr>
+			<tr valign="right">
+				<td>
+					<input
+						class="form-control"
+						data-ng-change="inputDiscount();"
+						data-ng-disabled="!inputDiscountAmount"
+						data-ng-model="discount"
+						only-numbers
+						placeholder="Discount ..."
+					/>
+				</td>
+			</tr>
+			<tr valign="right">
+				<td align="right">
+					Total Discount:
+				</td>
+				<td>
+					<span data-ng-bind="total_discount | currency"></span>
+				</td>
+			</tr>
+			<tr valign="right">
+				<td align="right">
+					Grand Total:
+				</td>
+				<td>
+					<span
+						data-ng-hide="grand_total <= 0"
+						data-ng-bind="grand_total | currency"
+					></span>
+					<span
+						data-ng-hide="grand_total > 0"
+					>
+						$0.00
+					</span>
+				</td>
+			</tr>
+			<tr valign="right">
+				<td align="right">
+					Payment Method:
+				</td>
+				<td>
+					<select
+						class="form-control"
+						data-ng-options="payment_method for payment_method in ['Cash', 'ACLIDA', 'CPB']"
+						data-ng-init="payment_method == payment_method"
+						data-ng-model="payment_method"
+					>
+					</select>
+					<div data-ng-show="payment_method == 'ACLIDA' || payment_method == 'CPB'">
+						<br/>
+						<input type="text" data-ng-model="bank_charge" class="form-control" placeholder="Bank Charge..."/>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td align="right">
+					Total Last Balance:
+				</td>
+				<td>
+					<span
+						data-ng-hide="total_last_balance <= 0"
+						data-ng-bind="total_last_balance | currency"
+					></span>
+					<span
+						data-ng-hide="total_last_balance > 0"
+					>
+						$0.00
+					</span>
+				</td>
+			</tr>
+		</table>
+	</div>
+</div>
+<receive-invoice-popup></receive-invoice-popup>
+<style>
+.scroll{
+	height:300px;
+	width:100%;
+	overflow:hidden;
+	overflow-y:scroll;
+}
+</style>

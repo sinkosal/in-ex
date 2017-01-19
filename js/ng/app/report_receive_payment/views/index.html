@@ -1,0 +1,223 @@
+<div class="panel panel-default">
+	<div class="panel-heading">
+		Report Account Receivable
+	</div>
+	<div class="panel-body">
+		<table class="table table-bordered">
+			<tr>
+				<td>
+					From Date:
+				</td>
+				<td>
+					<div
+						cambodia-date-picker
+						date-format="y/MM/dd"
+						class="col-md-4"
+					>
+						<input data-ng-model="from_date" class="form-control date" type="text"/>
+					</div>
+				</td>
+				<td>
+					To Date:
+				</td>
+				<td>
+					<div
+						cambodia-date-picker
+						date-format="y/MM/dd"
+						class="col-md-4"
+					>
+						<input data-ng-model="to_date" class="form-control date" type="text"/>
+					</div>
+				</td>
+				<td width="300px">
+					<ui-select
+						ng-model="customer_list.selected"
+						theme="select2"
+						data-ng-disabled="disabled"
+						reset-search-input="false"
+						style="width: 250px;"
+					>
+						<ui-select-match placeholder="Select or Search a Customer in the list...">
+							{{$select.selected.full_name}}
+						</ui-select-match>
+						<ui-select-choices
+							repeat="customer_list in customers track by $index"
+							refresh="refreshCustomerList($select.search)"
+							refresh-delay="0"
+						>
+							<div data-ng-bind-html="customer_list.full_name | highlight: $select.search"></div>
+						</ui-select-choices>
+					</ui-select>
+					<i class="fa fa-refresh" data-ng-click="customer_list = {}"></i>
+				</td>
+				<td rowspan="2" width="180px">
+					<button class="btn btn-success margin-top" data-ng-click="init();">
+						<i class="fa fa-hourglass-half"></i>
+						Filter
+					</button>
+					<button class="btn btn-default margin-top" data-ng-click="print();">
+						<i class="fa fa-print"></i>
+						Print
+					</button>
+				</td>
+			</tr>
+		</table>
+		<div data-ng-if="invoice.count" id="print">
+			<table width="100%">
+				<tr>
+					<td align="center">
+						<img src="images/IMI.jpg" width="350px"/>
+						<h4>
+							Report Account Receivable
+						</h4>
+						From Date: {{from_date}} To Date: {{to_date}}
+					</td>
+				</tr>
+			</table>
+			<table class="table table-bordered">
+				<tr data-ng-repeat="i in invoice.elements">
+					<td>
+						<table class="table table-bordered">
+							<tr rowspan="2">
+								<td rowspan="2" style="background-color: #F7F7F7;">
+									{{$index + 1}}
+								</td>
+								<td style="background-color: #F7F7F7;">
+									<b>
+										Id:
+										<span data-ng-bind="i.id"></span>,
+										Date:
+										<span data-ng-bind="i.receive_payment_date"></span>,
+										Customer Name:
+										<span data-ng-bind="i.customer_name"></span>
+									</b>
+								</td>
+							</tr>
+							<tr>
+								<td colspan="2" style="padding: 0px;">
+									<table class="table table-bordered">
+										<tr style="background-color: #F7F7F7;">
+											<th>
+												No
+											</th>
+											<th>
+												Invoice No
+											</th>
+											<th>
+												Total Amount
+											</th>
+											<th>
+												Deposit Before
+											</th>
+											<th>
+												Last Deposit
+											</th>
+											<th>
+												Balance Before
+											</th>
+											<th>
+												Last Balance
+											</th>
+										</tr>
+										<tr data-ng-repeat="item in i.detail">
+											<td>
+												{{$index +1}}
+											</td>
+											<td>
+												{{item.invoice_no}}
+											</td>
+											<td>
+												{{item.total_amount | currency}}
+											</td>
+											<td>
+												{{item.deposit_before | currency}}
+											</td>
+											<td>
+												{{item.last_deposit | currency}}
+											</td>
+											<td>
+												{{item.balance_before | currency}}
+											</td>
+											<td>
+												{{item.last_balance | currency}}
+											</td>
+										</tr>
+										<tr>
+											<td colspan="6" align="right">
+												<b>Total Balance:</b>
+											</td>
+											<td>
+												<b>{{i.total_balance | currency}}</b>
+											</td>
+										</tr>
+										<tr>
+											<td colspan="6" align="right">
+												<b>Discount Type:</b>
+											</td>
+											<td>
+												<b>{{i.discount_type}}</b>
+											</td>
+										</tr>
+										<tr>
+											<td colspan="6" align="right">
+												<b>Discount Amount:</b>
+											</td>
+											<td>
+												<b>{{i.discount_amount}}</b>
+											</td>
+										</tr>
+										<tr>
+											<td colspan="6" align="right">
+												<b>Total Discount Amount:</b>
+											</td>
+											<td>
+												<b>{{i.total_discount_amount | currency}}</b>
+											</td>
+										</tr>
+										<tr>
+											<td colspan="6" align="right">
+												<b>Total Payment Amount:</b>
+											</td>
+											<td>
+												<b>{{i.total_payment_amount | currency}}</b>
+											</td>
+										</tr>
+										<tr>
+											<td colspan="6" align="right">
+												<b>Payment Method:</b>
+											</td>
+											<td>
+												<b>{{i.payment_method}}</b>
+											</td>
+										</tr>
+										<tr>
+											<td colspan="6" align="right">
+												<b>Total Last Balance:</b>
+											</td>
+											<td>
+												<b>{{i.total_last_balance | currency}}</b>
+											</td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<div
+			data-ng-if="invoice.count == 0"
+		>
+			<div class="alert alert-warning alert-dismissible">
+				<strong>Warning!</strong> No Report.
+			</div>
+		</div>
+		<div
+			data-ng-if="!loading"
+			class="align_center"
+		>
+			<i class="fa fa-refresh fa-spin" style="font-size: 100px;"></i>
+		</div>
+	</div>
+</div>

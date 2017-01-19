@@ -1,0 +1,126 @@
+<div class="panel panel-default">
+    <div class="panel-body">
+        <div data-ng-if="customerList.count" id="print">
+            <table width="100%">
+                <tr>
+                    <td align="center">
+                        <img src="images/IMI.jpg" width="350px"/>
+                        <h4>
+                            Customer Brithday List
+                        </h4>
+                        Total Record: {{totalItems}}
+                    </td>
+                </tr>
+            </table>
+            <table class="table-print">
+                <tr>
+                    <th>
+                        No
+                    </th>
+                    <th>
+                        Customer New Id
+                    </th>
+                    <th>
+                        Customer Old Id
+                    </th>
+                    <th>
+                        Name
+                    </th>
+                    <th>
+                        Customer Type
+                    </th>
+                    <th>
+                        Sex
+                    </th>
+                    <th>
+                        Date Of Birth
+                    </th>
+                    <th>
+                        Barcode
+                    </th>
+                    <th>
+                        Country
+                    </th>
+                    <th>
+                        Phone
+                    </th>
+                    <th>
+                        Email
+                    </th>
+                    <th>
+                        Address
+                    </th>
+                    <th>
+                        Family Phone
+                    </th>
+                    <th>
+                        Relative Phone
+                    </th>
+                    <th>
+                        Detail
+                    </th>
+                </tr>
+                <tr data-ng-repeat="c in customerList.elements track by c.id">
+                    <td>
+                        {{$index +1}}
+                    </td>
+                    <td>
+                        {{c.id}}
+                    </td>
+                    <td>
+                        {{c.customerid}}
+                    </td>
+                    <td>
+                        {{c.full_name}}
+                    </td>
+                    <td>
+                        {{c.customer_type[0].name}}
+                    </td>
+                    <td>
+                        {{c.sex}}
+                    </td>
+                    <td>
+                        {{c.dob}}
+                    </td>
+                    <td>
+                        {{c.barcode}}
+                    </td>
+                    <td>
+                        {{c.country}}
+                    </td>
+                    <td>
+                        {{c.tel}}
+                    </td>
+                    <td>
+                        {{c.email}}
+                    </td>
+                    <td>
+                        {{c.address}}
+                    </td>
+                    <td>
+                        {{c.relative_contact}}
+                    </td>
+                    <td>
+                        {{c.relative_tel}}
+                    </td>
+                    <td>
+                        {{c.detail}}
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div
+            data-ng-if="customerList.elements == 0"
+        >
+            <div class="alert alert-warning alert-dismissible">
+                <strong>Warning!</strong> No Customer Birthday.
+            </div>
+        </div>
+        <div
+            data-ng-if="!customerList"
+            class="align_center"
+        >
+            <i class="fa fa-refresh fa-spin" style="font-size: 100px;"></i>
+        </div>
+    </div>
+</div>

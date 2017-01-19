@@ -1,0 +1,163 @@
+<form data-ng-submit="save();" name="myForm">
+<div
+	class="modal fade"
+	id="vendor-list-popup"
+	data-keyboard="false"
+	data-backdrop="static"
+>
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button
+					type="button"
+					class="close"
+					data-dismiss="modal"
+					data-ng-click="close();"
+				>
+					<span>&times;</span>
+				</button>
+				<h4>
+					<label>Vendor List</label>
+				</h4>
+	      	</div>
+			<div class="modal-body">
+				<div class="tab-content">
+					<table class="table table-bordered">
+						<tr>
+							<td>
+								Supplier Type:
+							</td>
+							<td>
+								<select
+									data-ng-model="supplier_type_id"
+									data-ng-options="supplier_type.id as supplier_type.name for supplier_type in supplierType.elements"
+									data-ng-init="supplier_type_id == supplier_type.id"
+									required
+									class="form-control"
+								>
+									<option value="">--Select--</option>
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								Name:
+							</td>
+							<td>
+								<input
+									type="text"
+									class="form-control"
+									data-ng-model="name"
+									required="required"
+								/>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								Company Name:
+							</td>
+							<td>
+								<input
+									type="text"
+									class="form-control"
+									data-ng-model="company_name"
+								/>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								Tel:
+							</td>
+							<td>
+								<input
+									type="text"
+									class="form-control"
+									data-ng-model="tel"
+									required="required"
+								/>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								Contact Name:
+							</td>
+							<td>
+								<input
+									type="text"
+									class="form-control"
+									data-ng-model="contact_name"
+								/>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								Email:
+							</td>
+							<td>
+								<input
+									type="email"
+									class="form-control"
+									data-ng-model="email"
+								/>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								Country:
+							</td>
+							<td>
+								<input
+									type="text"
+									class="form-control"
+									data-ng-model="country"
+								/>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								Address:
+							</td>
+							<td>
+								<input
+									type="text"
+									class="form-control"
+									data-ng-model="address"
+								/>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								Note:
+							</td>
+							<td>
+								<textarea
+									row="5"
+									class="form-control"
+									data-ng-model="note"
+								></textarea>
+							</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button
+					class="btn btn-default"
+					data-dismiss="modal"
+					data-ng-click="close();"
+				>
+					Close
+				</button>
+				<button
+					class="btn btn-primary"
+					data-ng-disabled="!disable"
+				>
+					Save
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+</form>
+
+

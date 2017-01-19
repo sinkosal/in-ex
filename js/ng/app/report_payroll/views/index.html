@@ -1,0 +1,211 @@
+<div class="panel panel-default">
+	<div class="panel-heading">
+		Report Payroll
+	</div>
+	<div class="panel-body">
+		<table class="table table-bordered">
+			<tr>
+				<td>
+					Date:
+				</td>
+				<td>
+					<div cambodia-date-picker date-format="y-MM-dd" class="input-group">
+						<input type="text" class="form-control" data-ng-model="date"/>
+						<span class="input-group-btn">
+				        	<button class="btn btn-default" type="button">
+				        		<i class="fa fa-calendar"></i>
+				        	</button>
+						</span>
+				    </div>
+				</td>
+				<td>
+					Staff Name:
+				</td>
+				<td width="300px">
+					<ui-select
+						ng-model="staff_list.selected"
+						theme="select2"
+						data-ng-disabled="disabled"
+						reset-search-input="false"
+						style="width: 250px;"
+					>
+						<ui-select-match placeholder="Select or Search Staff in the list...">
+							{{$select.selected.name}}
+						</ui-select-match>
+						<ui-select-choices
+							repeat="staff_list in staffList track by $index"
+							refresh="refreshStaffList($select.search)"
+							refresh-delay="2"
+						>
+							<div data-ng-bind-html="staff_list.name | highlight: $select.search"></div>
+						</ui-select-choices>
+					</ui-select>
+					<i class="fa fa-refresh" data-ng-click="staff_list = {}"></i>
+				</td>
+				<td style="padding-top: 0px;">
+					<button class="btn btn-success margin-top" data-ng-click="init();">
+						<i class="fa fa-hourglass-half"></i>
+						Filter
+					</button>
+					<button class="btn btn-default margin-top" data-ng-click="print();">
+						<i class="fa fa-print"></i>
+						Print
+					</button>
+				</td>
+			</tr>
+		</table>
+		<div data-ng-if="payroll.count" id="print">
+			<table width="100%">
+				<tr>
+					<td align="center">
+						<img src="images/IMI.jpg" width="350px"/>
+						<h4>
+							Payroll Report
+						</h4>
+						Date: {{date}}
+					</td>
+				</tr>
+			</table>
+			<br>
+			<table class="table-print">
+				<tr style="background-color: #F7F7F7;">
+					<th>
+						No
+					</th>
+					<th>
+						Staff Name
+					</th>
+					<th>
+						Total Regular Rate
+					</th>
+					<th>
+						Total Ot
+					</th>
+					<th>
+						Total Service Perform
+					</th>
+					<th>
+						Note
+					</th>
+					<th>
+						Other Compensation
+					</th>
+					<th>
+						Spouse Minor
+					</th>
+					<th>
+						Gross Salary
+					</th>
+					<th>
+						Taxable Salary
+					</th>
+					<th>
+						Tax
+					</th>
+					<th>
+						Tax Amount
+					</th>
+					<th>
+						Net Salary
+					</th>
+					<th>
+						Total Salary
+					</th>
+					<th>
+						Staff Advance
+					</th>
+					<th>
+						Final Salary
+					</th>
+				</tr>
+				<tr data-ng-repeat="item in payroll.elements">
+					<td>
+						{{$index +1}}
+					</td>
+					<td>
+						{{item.staff_detail[0].name}}
+					</td>
+					<td>
+						{{item.total_regular_amount | currency}}
+					</td>
+					<td>
+						{{item.total_ot_amount | currency}}
+					</td>
+					<td>
+						{{item.total_service_perform | currency}}
+					</td>
+					<td>
+						{{item.note}}
+					</td>
+					<td>
+						{{item.other_compensation | currency}}
+					</td>
+					<td>
+						{{item.spouse_minor | currency}}
+					</td>
+					<td>
+						{{item.gross_salary | currency}}
+					</td>
+					<td>
+						{{item.taxable_salary | currency}}
+					</td>
+					<td>
+						{{item.tax | currency}}
+					</td>
+					<td>
+						{{item.tax_amount | currency}}
+					</td>
+					<td>
+						{{item.net_salary | currency}}
+					</td>
+					<td>
+						{{item.total_salary | currency}}
+					</td>
+					<td>
+						{{item.staff_advance | currency}}
+					</td>
+					<td>
+						{{item.final_salary | currency}}
+					</td>
+				</tr>
+				<tr>
+					<td colspan="15" align="right">
+						<b>Total Tax Amount:</b>
+					</td>
+					<td>
+						{{total_tax_amount}}
+					</td>
+				</tr>
+				<tr>
+					<td colspan="15" align="right">
+						<b>Total Staff Advance:</b>
+					</td>
+					<td>
+						{{total_staff_advance | currency}}
+					</td>
+				</tr>
+				<tr>
+					<td colspan="15" align="right">
+						<b>Total Salary Amount:</b>
+					</td>
+					<td>
+						{{total_salary_amount | currency}}
+					</td>
+				</tr>
+			</table>
+		</div>
+		<div
+			data-ng-if="payroll.count == 0"
+		>
+			<div class="alert alert-warning alert-dismissible">
+				<strong>Warning!</strong> No Report.
+			</div>
+		</div>
+		<div
+			data-ng-if="!loading"
+			class="align_center"
+		>
+			<i class="fa fa-refresh fa-spin" style="font-size: 100px;"></i>
+		</div>
+	</div>
+</div>

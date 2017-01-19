@@ -1,0 +1,132 @@
+<div class="panel panel-default">
+	<div class="panel-heading">
+		Journal Report
+	</div>
+	<div class="panel-body">
+		<table class="table table-bordered">
+			<tr>
+				<td>
+					From Date:
+				</td>
+				<td>
+					<div cambodia-date-picker date-format="y-MM-dd" class="input-group">
+						<input type="text" class="form-control" data-ng-model="from_date"/>
+						<span class="input-group-btn">
+				        	<button class="btn btn-default" type="button">
+				        		<i class="fa fa-calendar"></i>
+				        	</button>
+						</span>
+				    </div>
+				</td>
+				<td width="100px">
+					To Date:
+				</td>
+				<td>
+					<div cambodia-date-picker date-format="y-MM-dd" class="input-group">
+						<input type="text" class="form-control" data-ng-model="to_date"/>
+						<span class="input-group-btn">
+				        	<button class="btn btn-default" type="button">
+				        		<i class="fa fa-calendar"></i>
+				        	</button>
+						</span>
+				    </div>
+				</td>
+				<td>
+					<ui-select
+						ng-model="vendor_list.selected"
+						theme="select2"
+						data-ng-disabled="disabled"
+						reset-search-input="false"
+						style="width: 250px;"
+					>
+						<ui-select-match placeholder="Enter An Vendor Name...">
+							{{$select.selected.name}}
+						</ui-select-match>
+						<ui-select-choices
+								repeat="vendor_list in vendorList track by $index"
+								refresh="refreshVendorList($select.search)"
+								refresh-delay="0"
+						>
+							<span data-ng-bind-html="vendor_list.name | highlight: $select.search"></span>
+						</ui-select-choices>
+					</ui-select>
+					<i class="fa fa-refresh" data-ng-click="vendor_list = {}"></i>
+				</td>
+				<td>
+					<button class="btn btn-success margin-top" data-ng-click="init();">
+						<i class="fa fa-hourglass-half"></i>
+						Filter
+					</button>
+					<button class="btn btn-default margin-top" data-ng-click="print();">
+						<i class="fa fa-print"></i>
+						Print
+					</button>
+				</td>
+			</tr>
+		</table>
+		<div data-ng-if="journal.count" id="print">
+			<table width="100%">
+				<tr>
+					<td align="center">
+						<img src="images/IMI.jpg" width="350px"/>
+						<h4>
+							General Journal
+						</h4>
+						From: {{from_date}} To: {{to_date}}
+					</td>
+				</tr>
+			</table>
+			<br/><br/>
+			<table class="table-print">
+				<tr>
+					<th>Trans No</th>
+					<th>Trans Date</th>
+					<th>Account Id</th>
+					<th>Account Description</th>
+					<th>Supplier Name</th>
+					<th>Reference</th>
+					<th>Trans Description</th>
+					<th>Debit</th>
+					<th>Credit</th>
+				</tr>
+				<tr data-ng-repeat="j in journal.elements">
+					<td>{{j.trans_no}}</td>
+					<td>
+						<span data-ng-bind="formatDate(j.trans_date) | date:'dd-MMMM-yyyy'"></span>
+					</td>
+					<td>{{j.account_id}}</td>
+					<td>{{j.account_name}}</td>
+					<td>{{j.supplier_name}}</td>
+					<td>{{j.reference_id}}</td>
+					<td>{{j.note}}</td>
+					<td>{{j.debit | currency}}</td>
+					<td>{{j.credit | currency}}</td>
+				</tr>
+				<tr>
+					<td colspan="7" align="right">
+						<b>Total:</b>
+					</td>
+					<td>
+						<b>{{total_debit | currency}}</b>
+					</td>
+					<td>
+						<b>{{total_credit | currency}}</b>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<div
+			data-ng-if="journal.count == 0"
+		>
+			<div class="alert alert-warning alert-dismissible">
+				<strong>Warning!</strong> No Report.
+			</div>
+		</div>
+		<div
+			data-ng-if="!loading"
+			class="align_center"
+		>
+			<i class="fa fa-refresh fa-spin" style="font-size: 100px;"></i>
+		</div>
+	</div>
+</div>
